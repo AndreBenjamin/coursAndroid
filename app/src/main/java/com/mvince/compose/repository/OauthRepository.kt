@@ -17,7 +17,7 @@ import com.mvince.compose.util.Constants.NAME
 import com.mvince.compose.util.Constants.PHOTO_URL
 import com.mvince.compose.util.Constants.USERS_REF
 
-class CustomAuthActivity : Activity() {
+class OauthRepository : Activity() {
 
     // [START declare_auth]
     private lateinit var auth: FirebaseAuth
