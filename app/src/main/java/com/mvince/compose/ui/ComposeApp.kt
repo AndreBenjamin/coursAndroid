@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mvince.compose.signUp.SignUpScreen
 import com.mvince.compose.ui.details.DetailsScreen
 import com.mvince.compose.ui.users.UsersScreen
 
@@ -15,17 +16,10 @@ fun ComposeApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Route.USER
+        startDestination = Route.SIGN_UP
     ) {
-        composable(Route.USER) { backStackEntry ->
-            UsersScreen(
-                onUserClick = { username ->
-                    // In order to discard duplicated navigation events, we check the Lifecycle
-                    if (backStackEntry.lifecycle.currentState == Lifecycle.State.RESUMED) {
-                        navController.navigate("${Route.DETAIL}/$username")
-                    }
-                }
-            )
+        composable(Route.SIGN_UP) {
+            SignUpScreen(navController)
         }
         composable(
             route = "${Route.DETAIL}/{${Argument.USERNAME}}",
@@ -43,6 +37,7 @@ fun ComposeApp() {
 object Route {
     const val USER = "user"
     const val DETAIL = "detail"
+    const val SIGN_UP = "signUp"
 }
 
 object Argument {

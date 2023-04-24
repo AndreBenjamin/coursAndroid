@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "852175022211",
+    "project_id": "dev-mobile-4a3e8",
+    "storage_bucket": "dev-mobile-4a3e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852175022211:android:f6b6c01dedfea419cf53b6",
+        "android_client_info": {
+          "package_name": "com.example.tpfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852175022211-v9hel2eiqt20dufjrii0jprna76174ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7DacnKE1oGy8bz8bUV7KtZ7pwKWqteFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852175022211-v9hel2eiqt20dufjrii0jprna76174ul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852175022211:android:c391ee2b24fe8ebdcf53b6",
+        "android_client_info": {
+          "package_name": "com.mvince.compose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852175022211-v9hel2eiqt20dufjrii0jprna76174ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7DacnKE1oGy8bz8bUV7KtZ7pwKWqteFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852175022211-v9hel2eiqt20dufjrii0jprna76174ul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
