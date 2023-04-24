@@ -36,7 +36,7 @@ class SignUpViewModel @Inject constructor(
             if (uid != null){
                 _isAuthentificated.value = firebaseRepository.insertUser(uid, UserFirebase("me@me.com", 5,0,"melala","2022:12:12","1999:11:12"))
             }
-            _signupFlow.value = authRepository.signup(email, password)
+            _signupFlow.value = authRepository.signUp(email, password)
         }
     }
 }
