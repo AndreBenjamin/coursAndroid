@@ -18,6 +18,7 @@ import com.mvince.compose.util.Constants.NAME
 import com.mvince.compose.util.Constants.PHOTO_URL
 import com.mvince.compose.util.Constants.USERS_REF
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class OauthRepository : Activity() {
 
@@ -64,9 +65,9 @@ class OauthRepository : Activity() {
         // [END create_user_with_email]
     }
 
-    fun signUp(email: String, password: String) {
+    fun signUp(email: String, password: String): Boolean {
 
-        var userInfo = MutableStateFlow<UserFirebase?>(null)
+        var signed = false
         // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -74,9 +75,8 @@ class OauthRepository : Activity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
-                    val firebaseUser =
-
                     updateUI(user)
+                    signed = true
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -85,6 +85,7 @@ class OauthRepository : Activity() {
                     updateUI(null)
                 }
             }
+        return signed
         // [END sign_in_with_email]
     }
 
