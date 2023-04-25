@@ -1,4 +1,4 @@
-package com.mvince.compose.ui.signup
+package com.mvince.compose.ui.signUp
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.mvince.compose.ui.details.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,18 +1,15 @@
-package com.mvince.compose.ui.signup
+package com.mvince.compose.ui.signUp
 
-import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-import androidx.compose.ui.tooling.data.EmptyGroup.name
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mvince.compose.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.google.firebase.auth.FirebaseUser
 import com.mvince.compose.domain.UserFirebase
+import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
 import kotlinx.coroutines.launch
-import ro.alexmamo.firebase.auth.OauthRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,9 +19,9 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
 
     // MutableStateFlow can change its value
-    private val _signupFlow = MutableStateFlow<FirebaseUser?>(null)
+    private val _signupFlow = MutableStateFlow<UserFirebase?>(null)
     // StateFlow can't change its value
-    val signupFlow: StateFlow<FirebaseUser?> = _signupFlow
+    val signupFlow: StateFlow<UserFirebase?> = _signupFlow
 
     private val _isAuthentificated = MutableStateFlow<Boolean>(false)
     val isAuthentificated: StateFlow<Boolean>

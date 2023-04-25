@@ -1,4 +1,4 @@
-package ro.alexmamo.firebase.auth
+package com.mvince.compose.repository
 
 import android.app.Activity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.UserFirebase
 
 // Init Variable
 import com.mvince.compose.util.Constants.CREATED_AT
@@ -16,6 +17,7 @@ import com.mvince.compose.util.Constants.ERROR_MESSAGE
 import com.mvince.compose.util.Constants.NAME
 import com.mvince.compose.util.Constants.PHOTO_URL
 import com.mvince.compose.util.Constants.USERS_REF
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class OauthRepository : Activity() {
 
@@ -63,6 +65,8 @@ class OauthRepository : Activity() {
     }
 
     fun signUp(email: String, password: String) {
+
+        var userInfo = MutableStateFlow<UserFirebase?>(null)
         // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -70,6 +74,8 @@ class OauthRepository : Activity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
+                    val firebaseUser =
+
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
