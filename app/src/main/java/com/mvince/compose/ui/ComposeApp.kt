@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mvince.compose.ui.signUp.SignUpScreen
 import com.mvince.compose.ui.details.DetailsScreen
+import com.mvince.compose.ui.game.GameScreen
 import com.mvince.compose.ui.signUp.SignUpScreen
 import com.mvince.compose.ui.users.UsersScreen
 
@@ -17,10 +18,13 @@ fun ComposeApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Route.SIGN_UP
+        startDestination = Route.GAME
     ) {
         composable(Route.SIGN_UP) {
             SignUpScreen(navController)
+        }
+        composable(Route.GAME) {
+            GameScreen()
         }
         composable(
             route = "${Route.DETAIL}/{${Argument.USERNAME}}",
@@ -39,6 +43,7 @@ object Route {
     const val USER = "user"
     const val DETAIL = "detail"
     const val SIGN_UP = "signUp"
+    const val GAME = "game"
 }
 
 object Argument {

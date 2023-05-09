@@ -2,6 +2,7 @@ package com.mvince.compose.di
 
 import com.mvince.compose.BuildConfig
 import com.mvince.compose.network.DetailsApi
+import com.mvince.compose.network.QuestionsOfTheDayApi
 import com.mvince.compose.network.UsersApi
 import dagger.Module
 import dagger.Provides
@@ -35,7 +36,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create())
-        .baseUrl("https://api.github.com/")
+        .baseUrl("https://opentdb.com/")
         .client(okHttpClient)
         .build()
 
@@ -48,4 +49,8 @@ object NetworkModule {
     fun provideUserDetailsService(retrofit: Retrofit): DetailsApi =
         retrofit.create(DetailsApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideQuestionsOfTheDayApiService(retrofit: Retrofit): QuestionsOfTheDayApi =
+        retrofit.create(QuestionsOfTheDayApi::class.java)
 }
