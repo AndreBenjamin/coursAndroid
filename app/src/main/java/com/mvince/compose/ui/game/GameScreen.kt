@@ -21,9 +21,9 @@ fun GameScreen() {
     Scaffold() {
         Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
             Text(text = currentQuestion?.question ?:"")
-            Button(onClick = { viewModel.validateAnswers(currentQuestion, choosenAnswers)}) {
+            /*Button(onClick = { viewModel.validateAnswers(currentQuestion, choosenAnswers)}) {
                 
-            }
+            }*/
             
         }
         
