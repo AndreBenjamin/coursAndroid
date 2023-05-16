@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mvince.compose.repository.QuestionsRepository
 import com.mvince.compose.network.model.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-class GameViewModel @Inject constructor(private val questionsRepository: QuestionsRepository):
-    ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(private val questionsRepository: QuestionsRepository): ViewModel() {
 
     private val _currentQuestion = MutableStateFlow<Result?>(null)
     val currentQuestion: StateFlow<Result?>

@@ -20,20 +20,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    fun getUserProfile(): FirebaseUser? {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            // TODO Add Real Info To Return
-            val name = it.displayName
-            val email = it.email
-
-            // Check if user's email is verified
-            val emailVerified = it.isEmailVerified
-
-            // Get Firebase User Id
-            val uid = it.uid
-        }
-        return user
-    }
 }

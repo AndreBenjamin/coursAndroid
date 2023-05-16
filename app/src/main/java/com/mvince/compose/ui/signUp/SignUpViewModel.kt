@@ -2,6 +2,9 @@ package com.mvince.compose.ui.signUp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: OauthRepository,
-    private val firebaseRepository: UserFirebaseRepository,
-    private val mainActivity: MainActivity
+    private val firebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
 
     // MutableStateFlow can change its value
@@ -35,13 +37,29 @@ class SignUpViewModel @Inject constructor(
     fun signup(email: String, password: String) {
         viewModelScope.launch {
             authRepository.signUp(email, password)
-            val user = mainActivity.getUserProfile()
+                val user = getUserProfile()
             if (user != null) {
                 if (user.uid != null){
                     _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase("me@me.com", 5,0,"melala","2022:12:12","1999:11:12"))
                 }
             }
-            _isSigned.value = authRepository.signUp(email, password)
+            _isSigned.value = true //authRepository.signUp(email, password)
         }
+    }
+
+    fun getUserProfile(): FirebaseUser? {
+        val user = Firebase.auth.currentUser
+        user?.let {
+            // TODO: Add Real Info To Return
+            val name = it.displayName
+            val email = it.email
+
+            // Check if user's email is verified
+            val emailVerified = it.isEmailVerified
+
+            // Get Firebase User Id
+            val uid = it.uid
+        }
+        return user
     }
 }

@@ -19,91 +19,36 @@ import com.mvince.compose.util.Constants.PHOTO_URL
 import com.mvince.compose.util.Constants.USERS_REF
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class OauthRepository : Activity() {
+class OauthRepository @Inject constructor(private val firebaseAuth: FirebaseAuth) {
 
-    // [START declare_auth]
-    private lateinit var auth: FirebaseAuth
-    // [END declare_auth]
+    val currentUser: FirebaseUser?
+        get() = firebaseAuth.currentUser
 
-    private var customToken: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        auth = Firebase.auth
-        // [END initialize_auth]
+    suspend fun login(email: String, password: String): FirebaseUser? {
+        return try {
+            val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            result.user
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    // [START on_start_check_user]
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
-    // [END on_start_check_user]
-
-    private fun createAccount(email: String, password: String) {
-        // [START create_user_with_email]
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-                    updateUI(null)
-                }
-            }
-        // [END create_user_with_email]
+    suspend fun signUp(email: String, password: String): FirebaseUser? {
+        return try {
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            result.user
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    fun signUp(email: String, password: String): Boolean {
-
-        var signed = false
-        // [START sign_in_with_email]
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                    signed = true
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-                    updateUI(null)
-                }
-            }
-        return signed
-        // [END sign_in_with_email]
+    fun logout() {
+        firebaseAuth.signOut()
     }
 
-    private fun sendEmailVerification() {
-        // [START send_email_verification]
-        val user = auth.currentUser!!
-        user.sendEmailVerification()
-            .addOnCompleteListener(this) { task ->
-                // Email Verification sent
-            }
-        // [END send_email_verification]
-    }
-
-    private fun updateUI(user: FirebaseUser?) {
-
-    }
-
-    companion object {
-        private const val TAG = "CustomAuthActivity"
-    }
 }

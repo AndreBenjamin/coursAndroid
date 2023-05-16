@@ -24,9 +24,6 @@ fun GameScreen() {
             /*Button(onClick = { viewModel.validateAnswers(currentQuestion, choosenAnswers)}) {
                 
             }*/
-            
         }
-        
     }
-    
 }
