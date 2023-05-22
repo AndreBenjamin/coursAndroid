@@ -57,6 +57,16 @@ class OauthRepository @Inject constructor(private val firebaseAuth: FirebaseAuth
         }
     }
 
+    suspend fun sendPasswordResetEmail(email: String): Boolean? {
+        return try {
+            val result = firebaseAuth.sendPasswordResetEmail(email).await()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     fun logout() {
         firebaseAuth.signOut()
     }

@@ -66,6 +66,15 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun resetPassword(email: String) {
+        viewModelScope.launch {
+
+            authRepository.sendPasswordResetEmail(email)
+        }
+    }
+
     fun getUserProfile(): FirebaseUser? {
         val user = Firebase.auth.currentUser
         user?.let {

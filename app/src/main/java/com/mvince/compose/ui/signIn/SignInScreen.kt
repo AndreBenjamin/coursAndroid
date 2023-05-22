@@ -40,9 +40,10 @@ fun SignInScreen(NavHostController: NavHostController) {
     val authResource = viewModel.signupFlow.collectAsState()
     Box(
         contentAlignment = Alignment.Center
-    ){
-    Column(modifier = Modifier.fillMaxSize()) {
-            TextField(value = email, onValueChange = { email = it }, label = { Text(text = "Email") },
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TextField(
+                value = email, onValueChange = { email = it }, label = { Text(text = "Email") },
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.None,
                     autoCorrect = false,
@@ -50,33 +51,45 @@ fun SignInScreen(NavHostController: NavHostController) {
                     imeAction = ImeAction.Next
                 ),
             )
-        }
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            visualTransformation = PasswordVisualTransformation(),
-            label = { Text(text = "Mot de passe") },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false,
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                visualTransformation = PasswordVisualTransformation(),
+                label = { Text(text = "Mot de passe") },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
 
-                )
-        )
-        Button(
-            onClick = { viewModel.signIn(email, password) },
-            enabled = email.isNotEmpty() && password.isNotEmpty()
-        ) {
-            Text(
-                text = "S'enregistrer",
-                style = MaterialTheme.typography.titleMedium
+                    )
             )
+            Button(
+                onClick = { viewModel.signIn(email, password) },
+                enabled = email.isNotEmpty() && password.isNotEmpty()
+            ) {
+                Text(
+                    text = "S'enregistrer",
+                    style = MaterialTheme.typography.titleMedium
+                )
 
+            }
+            Button(
+                onClick = { viewModel.resetPassword(email) },
+                enabled = email.isNotEmpty()
+            ) {
+                Text(
+                    text = "Reinistialiser le mot de passe",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+            }
         }
+
     }
 }
 
-fun checkEmailValidity(email: String): Boolean{
-    return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+fun checkEmailValidity(email: String): Boolean {
+    return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+        .matches();
 }
