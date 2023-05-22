@@ -1,5 +1,7 @@
 package com.mvince.compose.domain
 
+import java.util.Date
+
 data class UserFirebase(
     // Val si non modif, Var si modif
     var email: String,

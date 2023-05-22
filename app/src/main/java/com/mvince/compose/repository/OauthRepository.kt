@@ -47,6 +47,16 @@ class OauthRepository @Inject constructor(private val firebaseAuth: FirebaseAuth
         }
     }
 
+    suspend fun signIn(email: String, password: String): FirebaseUser? {
+        return try {
+            val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            result.user
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     fun logout() {
         firebaseAuth.signOut()
     }

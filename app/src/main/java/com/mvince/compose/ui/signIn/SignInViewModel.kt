@@ -1,4 +1,4 @@
-package com.mvince.compose.ui.signUp
+package com.mvince.compose.ui.signIn
 
 import android.os.Build
 import android.text.TextUtils
@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+class SignInViewModel @Inject constructor(
     private val authRepository: OauthRepository,
     private val firebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
@@ -43,14 +43,12 @@ class SignUpViewModel @Inject constructor(
     val isAuthentificated: StateFlow<Boolean>
             get() = _isAuthentificated
 
-    var isEmailValid by mutableStateOf(false)
-    var isPasswordValid by mutableStateOf(false)
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun signup(email: String, pseudo: String, password: String) {
+    fun signIn(email: String, password: String) {
         viewModelScope.launch {
 
-            authRepository.signUp(email, password)
+            authRepository.signIn(email, password)
                 val user = getUserProfile()
 
             if (user != null) {
@@ -60,12 +58,11 @@ class SignUpViewModel @Inject constructor(
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
 
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0,pseudo,current.format(formatter), current.format(formatter)))
+                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0, "",current.format(formatter), current.format(formatter)))
                 }
             }
-            _isSigned.value = true //authRepository.signUp(email, password)
+            _isSigned.value = true //authRepository.signIn(email, password)
             
-            // rememberNavController(navigators = )
         }
     }
 
