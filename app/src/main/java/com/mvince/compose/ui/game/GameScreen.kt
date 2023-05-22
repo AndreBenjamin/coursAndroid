@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.forEach
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,10 +19,15 @@ fun GameScreen() {
     val viewModel = hiltViewModel<GameViewModel>()
     
     val currentQuestion = viewModel.currentQuestion.collectAsState().value
+
+    val questions = viewModel.questions.collectAsState().value
     Scaffold() {
         Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
-            Text(text = currentQuestion?.question ?:"")
-            /*Button(onClick = { viewModel.validateAnswers(currentQuestion, choosenAnswers)}) {
+            questions.forEach() { question ->
+                Text(text = question.question ?: "Pas de question disponible")
+            }
+            //Text(text = currentQuestion?.question ?: "Pas de question disponible")
+            /*Button(onClick = { viewModel.validateAnswers(currentQuestion, chosenAnswers)}) {
                 
             }*/
         }
