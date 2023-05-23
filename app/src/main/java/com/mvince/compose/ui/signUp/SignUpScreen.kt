@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,13 +21,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun SignUpScreen(NavHostController: NavHostController) {
+fun SignUpScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<SignUpViewModel>()
 
     // by default, the value is equal to 0, and remember will keep the value in memory
@@ -45,8 +48,21 @@ fun SignUpScreen(NavHostController: NavHostController) {
     Box(
         contentAlignment = Alignment.Center
     ){
-    Column(modifier = Modifier.fillMaxSize()) {
-            if (error != null) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TopAppBar(
+            navigationIcon = {
+                IconButton(onClick = { navHostController.navigate(Route.WELCOME_SCREEN) }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
+                }
+            },
+            title = {
+                Text(text = "TrivialPoursuite")
+            }
+        )
+        if (error != null) {
                 TextField(value = email, onValueChange = { email = it; error == !checkEmailValidity(email)  // Affiche une erreur si l'email n'est pas valide
                 }, label = { Text(text = "Email") },
                     keyboardOptions = KeyboardOptions(
@@ -87,6 +103,15 @@ fun SignUpScreen(NavHostController: NavHostController) {
             ) {
                 Text(
                     text = "S'inscrire",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+            }
+            Button(
+                onClick = { navHostController.navigate(Route.SIGN_IN) },
+            ) {
+                Text(
+                    text = "J'ai déja un compte",
                     style = MaterialTheme.typography.titleMedium
                 )
 
