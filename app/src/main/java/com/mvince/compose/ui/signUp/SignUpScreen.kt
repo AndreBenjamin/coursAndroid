@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,8 +20,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
 
@@ -45,6 +49,8 @@ fun SignUpScreen(navHostController: NavHostController) {
     val error: Boolean? = true
 
     val authResource = viewModel.signupFlow.collectAsState()
+    var showError by remember { mutableStateOf(false) }
+
     Box(
         contentAlignment = Alignment.Center
     ){
@@ -62,6 +68,15 @@ fun SignUpScreen(navHostController: NavHostController) {
                 Text(text = "TrivialPoursuite")
             }
         )
+
+        if (showError) {
+            Text(
+                text = "Compte déjà existant",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
         if (error != null) {
                 TextField(value = email, onValueChange = { email = it; error == !checkEmailValidity(email)  // Affiche une erreur si l'email n'est pas valide
                 }, label = { Text(text = "Email") },
@@ -98,7 +113,15 @@ fun SignUpScreen(navHostController: NavHostController) {
                     )
             )
             Button(
-                onClick = { viewModel.signup(email, pseudo, password) },
+                onClick = {
+                    viewModel.signup(email, pseudo, password)
+                    val user = Firebase.auth.currentUser
+                    if (user != null && user.email != null && user.email != ""){
+                        navHostController.navigate(Route.RULES)
+                    } else {
+                        showError = true
+                    }
+                          },
                 enabled = email.isNotEmpty() && pseudo.isNotEmpty() && password.isNotEmpty()
             ) {
                 Text(

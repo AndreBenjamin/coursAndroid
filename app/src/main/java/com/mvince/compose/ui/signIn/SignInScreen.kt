@@ -97,7 +97,7 @@ fun SignInScreen(navHostController: NavHostController) {
                 viewModel.signIn(email, password)
                 val user = Firebase.auth.currentUser
                 if (user != null && user.email != null && user.email != ""){
-                    navHostController.navigate(Route.GAME)
+                    navHostController.navigate(Route.RULES)
                 } else {
                     showError = true
                 }
