@@ -2,6 +2,7 @@ package com.mvince.compose.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import com.google.firebase.firestore.ktx.snapshots
@@ -16,10 +17,14 @@ class UserFirebaseRepository @Inject constructor(private val firestore: Firebase
     }
 
     fun getAll(): Flow<List<UserFirebase>> {
-        return firestore.collection(_collection).snapshots().map { it.toObjects<UserFirebase>() }
+        val test = firestore.collection(_collection).snapshots()
+        return test.map { it.toObjects<UserFirebase>() }
     }
 
+    fun getTop10(): Flow<List<UserFirebase>>{
+        return firestore.collection(_collection).orderBy("score", Query.Direction.ASCENDING).limit(10).snapshots().map { it.toObjects<UserFirebase>() }
+    }
     companion object{
-        private const val _collection: String = "USERS"
+        private const val _collection: String = "USER"
     }
 }

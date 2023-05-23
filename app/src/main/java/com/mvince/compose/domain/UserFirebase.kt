@@ -2,10 +2,10 @@ package com.mvince.compose.domain
 
 data class UserFirebase(
     // Val si non modif, Var si modif
-    var email: String,
+    var email: String = "",
     var bestScore: Int = 0,
     var score: Int = 0,
-    var pseudo: String,
-    var lastCo: String,
-    val signIn: String
+    var pseudo: String = "",
+    var lastCo: String = "",
+    val signIn: String = ""
 )
