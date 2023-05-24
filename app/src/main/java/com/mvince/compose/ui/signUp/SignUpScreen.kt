@@ -1,15 +1,20 @@
 package com.mvince.compose.ui.signUp
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +25,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -28,6 +34,7 @@ import com.google.firebase.ktx.Firebase
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,96 +58,134 @@ fun SignUpScreen(navHostController: NavHostController) {
     val authResource = viewModel.signupFlow.collectAsState()
     var showError by remember { mutableStateOf(false) }
 
-    Box(
-        contentAlignment = Alignment.Center
-    ){
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopAppBar(
-            navigationIcon = {
-                IconButton(onClick = { navHostController.navigate(Route.WELCOME_SCREEN) }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.navigate(Route.WELCOME_SCREEN) }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
+                    }
+                },
+                title = {
+                    Text(
+                        text = "TrivialPoursuit",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 }
-            },
-            title = {
-                Text(text = "TrivialPoursuite")
-            }
-        )
-
-        if (showError) {
-            Text(
-                text = "Compte déjà existant",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Red,
-                modifier = Modifier.padding(top = 8.dp)
             )
-        }
-        if (error != null) {
-                TextField(value = email, onValueChange = { email = it; error == !checkEmailValidity(email)  // Affiche une erreur si l'email n'est pas valide
-                }, label = { Text(text = "Email") },
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (showError) {
+                    Text(
+                        text = "Compte déjà existant",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+                if (error != null) {
+                    TextField(
+                        value = email,
+                        onValueChange = {
+                            email = it;
+                            error == !checkEmailValidity(email)  // Affiche une erreur si l'email n'est pas valide
+                        }, leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Email,
+                                contentDescription = "Email Icon"
+                            )
+                        },
+                        label = { Text(text = "Email") },
+                        placeholder = { Text(text = "Entrer votre Email") },
+                        modifier = Modifier.padding(top = 8.dp),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.None,
+                            autoCorrect = false,
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        ),
+                        isError = error // Affiche une erreur si l'email n'est pas valide
+                    )
+                }
+                TextField(
+                    value = pseudo,
+                    onValueChange = { pseudo = it },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Pseudo Icon"
+                        )
+                    },
+                    label = { Text(text = "Pseudo") },
+                    placeholder = { Text(text = "Entrer votre Pseudo") },
+                    modifier = Modifier.padding(top = 8.dp),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
-                        keyboardType = KeyboardType.Email,
+                        keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
-                    ),
-                    isError = error // Affiche une erreur si l'email n'est pas valide
-                )
-            }
-            TextField(value = pseudo,
-                onValueChange = { pseudo = it },
-                label = { Text(text = "Pseudo") },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                visualTransformation = PasswordVisualTransformation(),
-                label = { Text(text = "Mot de passe") },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done,
-
                     )
-            )
-            Button(
-                onClick = {
-                    viewModel.signup(email, pseudo, password)
-                    val user = Firebase.auth.currentUser
-                    if (user != null && user.email != null && user.email != ""){
-                        navHostController.navigate(Route.RULES)
-                    } else {
-                        showError = true
-                    }
-                          },
-                enabled = email.isNotEmpty() && pseudo.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text(
-                    text = "S'inscrire",
-                    style = MaterialTheme.typography.titleMedium
                 )
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    visualTransformation = PasswordVisualTransformation(),
+                    label = { Text(text = "Mot de passe") },
+                    placeholder = { Text(text = "Entrer votre Mot De Passe") },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
 
+                        )
+                )
+                Button(
+                    onClick = {
+                        viewModel.signup(email, pseudo, password)
+                        val user = Firebase.auth.currentUser
+                        if (user != null && user.email != null && user.email != ""){
+                            navHostController.navigate(Route.RULES)
+                        } else {
+                            showError = true
+                        }
+                    },
+                    enabled = email.isNotEmpty() && pseudo.isNotEmpty() && password.isNotEmpty(),
+                    modifier = Modifier.padding(top = 8.dp),
+                    ) {
+                    Text(
+                        text = "S'inscrire",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
-            Button(
-                onClick = { navHostController.navigate(Route.SIGN_IN) },
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "J'ai déja un compte",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Button(
+                    onClick = { navHostController.navigate(Route.SIGN_IN) },
+                ) {
+                    Text(
+                        text = "J'ai déja un compte",
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
+                }
             }
         }
-    }
+    )
 }
 
 fun checkEmailValidity(email: String): Boolean{

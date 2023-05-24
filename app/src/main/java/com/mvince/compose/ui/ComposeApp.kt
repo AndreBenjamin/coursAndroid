@@ -26,7 +26,7 @@ fun ComposeApp() {
     val user = Firebase.auth.currentUser
 
     fun startRedirection(): String {
-        if (user?.email != null){
+        if (user?.email == null){ // TODO BEN Retirer le == pour !=
             return Route.GAME
         }
         return Route.WELCOME_SCREEN
