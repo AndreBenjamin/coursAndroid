@@ -3,7 +3,6 @@ package com.mvince.compose.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,10 +27,10 @@ fun ComposeApp() {
     val user = Firebase.auth.currentUser
 
     fun startRedirection(): String {
-        if (user?.email == null){ // TODO BEN Retirer le == pour !=
-            return Route.USER
+        if (user?.email != null){ // TODO BEN Retirer le == pour !=
+            return Route.WELCOME_SCREEN
         }
-        return Route.WELCOME_SCREEN
+        return Route.WELCOME_SCREEN // TODO BEN Remettre Game ici
     }
 
     NavHost(

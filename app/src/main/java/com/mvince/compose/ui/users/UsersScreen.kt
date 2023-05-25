@@ -28,7 +28,7 @@ fun UsersScreen(navHostController: NavHostController) {
 
 // by default, the value is equal to 0, and remember will keep the value in memory
 
-    val user = Firebase.auth.currentUser!!
+    val user = Firebase.auth.currentUser
     val viewModel = hiltViewModel<UsersViewModel>()
 
     // fetching local context
