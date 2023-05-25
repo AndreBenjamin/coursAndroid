@@ -1,7 +1,6 @@
 package com.mvince.compose.ui
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,8 +10,6 @@ import com.mvince.compose.ui.Score.ScoreTableauScreen
 import com.mvince.compose.ui.signUp.SignUpScreen
 import com.mvince.compose.ui.details.DetailsScreen
 import com.mvince.compose.ui.game.GameScreen
-import com.mvince.compose.ui.signUp.SignUpScreen
-import com.mvince.compose.ui.users.UsersScreen
 
 @Composable
 fun ComposeApp() {

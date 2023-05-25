@@ -20,7 +20,7 @@ class UserFirebaseRepository @Inject constructor(private val firestore: Firebase
         return test.map { it.toObjects<UserFirebase>() }
     }
 
-    fun getByEmail(email: String): Flow<List<UserFirebase>> {
+    fun getByEmail(email: String?): Flow<List<UserFirebase>> {
         return firestore.collection(_collection).whereEqualTo("email", email).limit(1).snapshots().map { it.toObjects<UserFirebase>()}
     }
 
