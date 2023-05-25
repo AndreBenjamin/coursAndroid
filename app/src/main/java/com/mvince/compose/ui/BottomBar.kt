@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.Score.ScoreTableauScreen
 import com.mvince.compose.ui.game.GameScreen
+import com.mvince.compose.ui.modifyUser.ModifyUserScreen
 import com.mvince.compose.ui.rules.RulesScreen
 import com.mvince.compose.ui.theme.JetpackComposeBoilerplateTheme
 import com.mvince.compose.ui.users.UsersScreen
@@ -117,6 +118,9 @@ fun BottomBar(navController: NavHostController) {
                 }
                 composable(Route.CLASSEMENT) {
                     ScoreTableauScreen(appNavController)
+                }
+                composable(Route.MODIFY_USER) {
+                    ModifyUserScreen(appNavController)
                 }
                 composable(Route.RULES) {
                     RulesScreen(navController)

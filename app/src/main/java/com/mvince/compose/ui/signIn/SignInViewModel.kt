@@ -19,6 +19,9 @@ import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
 import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModules_KeyModule
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.forEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -27,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: OauthRepository,
-    private val firebaseRepository: UserFirebaseRepository
+    private val firebaseRepository: UserFirebaseRepository,
+    userFirebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
 
     // MutableStateFlow can change its value
@@ -43,9 +47,10 @@ class SignInViewModel @Inject constructor(
     val isAuthentificated: StateFlow<Boolean>
             get() = _isAuthentificated
 
+    val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun signIn(email: String, password: String) {
+    fun signIn(email: String, password: String, pseudo: String, bestScore: Int, score: Int, signIn: String) {
         viewModelScope.launch {
 
             authRepository.signIn(email, password)
@@ -58,7 +63,7 @@ class SignInViewModel @Inject constructor(
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
 
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0, "",current.format(formatter), current.format(formatter)))
+                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo,current.format(formatter), signIn))
                 }
             }
             _isSigned.value = true //authRepository.signIn(email, password)

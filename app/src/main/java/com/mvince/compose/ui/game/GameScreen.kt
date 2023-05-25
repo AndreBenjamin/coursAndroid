@@ -35,7 +35,7 @@ fun GameScreen(navHostController: NavHostController) {
     val numQuestion = viewModel.numQuestion.collectAsState().value +1
     if(gameState == true){
         Column(
-            modifier = androidx.compose.ui.Modifier.padding(12.dp),
+            modifier = androidx.compose.ui.Modifier.padding(top = 20.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -58,15 +58,10 @@ fun GameScreen(navHostController: NavHostController) {
                     Text(text = "Your score is : " + gameScore.toString())
                 }
             }
-        }
-        Column(modifier = androidx.compose.ui.Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
-        ) {
+
             if (gameScore!= null){
                 Text(text = "Score : " + gameScore)
             }
         }
-
     }
 }

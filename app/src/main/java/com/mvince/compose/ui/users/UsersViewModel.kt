@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.UserFirebase
+import com.mvince.compose.repository.UserFirebaseRepository
 import com.mvince.compose.repository.UsersRepository
 import com.mvince.compose.ui.MainActivity
 import com.mvince.compose.ui.welcomeScreen.WelcomeScreen
@@ -16,7 +18,9 @@ import com.mvince.compose.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UsersViewModel @Inject constructor(
-    private val usersRepository: UsersRepository
+    userFirebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
 
 
@@ -49,5 +53,6 @@ class UsersViewModel @Inject constructor(
         finish()*/
     }
 
+    val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
 }

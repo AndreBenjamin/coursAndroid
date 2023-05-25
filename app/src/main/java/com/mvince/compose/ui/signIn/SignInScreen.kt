@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mvince.compose.R
+import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
 
@@ -63,6 +64,8 @@ fun SignInScreen(navHostController: NavHostController) {
 
     // fetching local context
     val mContext = LocalContext.current
+
+    val currentUser = viewModel.currentUser.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -141,7 +144,14 @@ fun SignInScreen(navHostController: NavHostController) {
                         } else if (email.isEmpty() and password.isEmpty()){
                             Toast.makeText(mContext, "Champs mot de passe et email vide", Toast.LENGTH_SHORT).show()
                         } else {
-                            viewModel.signIn(email, password)
+                            currentUser.forEach {
+                                val current = it as UserFirebase
+                                val pseudo = current.pseudo
+                                val bestScore = current.bestScore
+                                val score = current.score
+                                val signIn = current.signIn
+                                viewModel.signIn(email, password, pseudo, bestScore, score, signIn)
+                            }
                             val user = Firebase.auth.currentUser
                             if (user != null && user.email != null && user.email != ""){
                                 navHostController.navigate(Route.RULES)

@@ -19,6 +19,8 @@ import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
 import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModules_KeyModule
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -26,23 +28,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RulesViewModel @Inject constructor(
-    private val authRepository: OauthRepository,
-    private val firebaseRepository: UserFirebaseRepository
+    userFirebaseRepository: UserFirebaseRepository
+
 ) : ViewModel() {
 
-    fun getUserProfile(): FirebaseUser? {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            // TODO: Add Real Info To Return
-            val name = it.displayName
-            val email = it.email
+    val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
-            // Check if user's email is verified
-            val emailVerified = it.isEmailVerified
-
-            // Get Firebase User Id
-            val uid = it.uid
-        }
-        return user
-    }
 }

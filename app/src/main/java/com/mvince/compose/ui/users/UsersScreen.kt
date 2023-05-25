@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -34,6 +35,8 @@ fun UsersScreen(navHostController: NavHostController) {
     // fetching local context
     val mContext = LocalContext.current
 
+    val currentUser = viewModel.currentUser.collectAsState().value
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,13 +46,18 @@ fun UsersScreen(navHostController: NavHostController) {
     ) {
         //1
 
-        if (user != null){
-            Text(text = "Pseudo : " + user.displayName, //faut mettre le pseudo fait par mika
-                style = MaterialTheme.typography.titleMedium)
-            Text(text = "email : " + user.email,
-                style = MaterialTheme.typography.titleMedium)
-            Text(text = "score : " , // faut mettre le score fait par Mika
-                style = MaterialTheme.typography.titleMedium)
+        currentUser.forEach {
+            val current = it as UserFirebase
+            if (user != null){
+                Text(text = "Pseudo : " + current.pseudo, //faut mettre le pseudo fait par mika
+                    style = MaterialTheme.typography.titleMedium)
+                Text(text = "email : " + current.email,
+                    style = MaterialTheme.typography.titleMedium)
+                Text(text = "score : "  + current.score, // faut mettre le score fait par Mika
+                    style = MaterialTheme.typography.titleMedium)
+                Text(text = "Inscription : "  + current.signIn, // faut mettre le score fait par Mika
+                    style = MaterialTheme.typography.titleMedium)
+            }
         }
 
 
@@ -62,25 +70,6 @@ fun UsersScreen(navHostController: NavHostController) {
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
-        /* TextField(value = avatar, //image
-             onValueChange = { avatar = it },
-             visualTransformation = PasswordVisualTransformation(),
-             label = { Text(text = "Avatar") },
-             keyboardOptions = KeyboardOptions(
-                 capitalization = KeyboardCapitalization.None,
-                 autoCorrect = false,
-                 keyboardType = KeyboardType.Text,
-                 imeAction = ImeAction.Done,
-             )
-         )*/
-
-        /* Column(
-             modifier = Modifier.fillMaxSize(),
-             verticalArrangement = Arrangement.Bottom
-         ) {
-            // Spacer(modifier = Modifier.weight(1f))
-             Row(Modifier.padding(16.dp)) {*/
     }
     Column(
         modifier = Modifier

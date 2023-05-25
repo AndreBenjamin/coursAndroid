@@ -27,13 +27,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
+import com.mvince.compose.ui.Score.ScoreTableauViewModel
 import com.mvince.compose.ui.signUp.SignUpViewModel
+import com.mvince.compose.ui.theme.Green700
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -41,8 +45,12 @@ import com.mvince.compose.ui.signUp.SignUpViewModel
 @Composable
 
 fun RulesScreen(navHostController: NavHostController) {
+    val viewModel = hiltViewModel<RulesViewModel>()
 
     val user = Firebase.auth.currentUser
+
+    val currentUser = viewModel.currentUser.collectAsState().value
+
 
     Scaffold(
         topBar = {
@@ -52,10 +60,48 @@ fun RulesScreen(navHostController: NavHostController) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
                     }
                 },
-                title = { Text(text = "TrivialPoursuit") }
+                title = {
+                    Text(
+                        text = "TrivialPoursuit",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
             )
         },
         content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+                    .verticalScroll(
+                        rememberScrollState()
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                currentUser.forEach {
+                    val current = it as UserFirebase
+                    Text(
+                        text = "Bienvenue " + current?.pseudo,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(top = 20.dp).padding(bottom = 15.dp)
+                    )
+                }
+
+                Text(
+                        text = "Mécanique du jeu : Chaque jour, vous recevez un ensemble de questions à répondre. Les questions peuvent couvrir différents sujets, tels que la culture générale, les sports, l'histoire, la géographie, etc. Le jeu peut être basé sur un format de quiz à choix multiples, où vous devez sélectionner la bonne réponse parmi plusieurs options.\n" +
+                                "\n" +
+                                "Système de score : Chaque fois que vous répondez correctement à une question, vous obtenez des points. Le nombre de points peut varier en fonction de la difficulté de la question. Vous pouvez accumuler ces points au fil du temps pour augmenter votre score global.\n" +
+                                "\n" +
+                                "Classement et comparaison avec les amis : Le jeu propose un système de classement où vous pouvez voir votre position par rapport à vos amis."+
+                                "\n" +
+                                "En jouant à ce jeu, vous pouvez tester vos connaissances, améliorer votre score, et passer un bon moment tout en apprenant de nouvelles choses chaque jour.",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .padding(bottom = 30.dp)
+                    )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -63,35 +109,17 @@ fun RulesScreen(navHostController: NavHostController) {
                     .verticalScroll(
                         rememberScrollState()
                     ),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                        text = "Bienvenue " + user?.email,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                Text(
-                        text = "Mécanique du jeu : Chaque jour, vous recevez un ensemble de questions à répondre. Les questions peuvent couvrir différents sujets, tels que la culture générale, les sports, l'histoire, la géographie, etc. Le jeu peut être basé sur un format de quiz à choix multiples, où vous devez sélectionner la bonne réponse parmi plusieurs options.\n" +
-                                "\n" +
-                                "Système de score : Chaque fois que vous répondez correctement à une question, vous obtenez des points. Le nombre de points peut varier en fonction de la difficulté de la question. Vous pouvez accumuler ces points au fil du temps pour augmenter votre score global.\n" +
-                                "\n" +
-                                "Classement et comparaison avec les amis : Le jeu propose un système de classement où vous pouvez voir votre position par rapport à vos amis. Vous pouvez voir leurs scores et les défier pour essayer de les surpasser. Cela ajoute une dimension compétitive au jeu et encourage la participation régulière."+
-                        "\n" +
-                                "En jouant à ce jeu-questionnaire quotidien, vous pouvez tester vos connaissances, améliorer votre score, vous comparer avec vos amis et passer un bon moment tout en apprenant de nouvelles choses chaque jour.",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                    )
-            }
-        },
-        bottomBar = {
-            BottomAppBar() {
                 Button(
                     onClick = { navHostController.navigate(Route.BOTTOM_BAR) },
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 2.dp)
                 ) {
-                    Text(text = "Suivant")
+                    Text(
+                        text = "Suivant",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }
