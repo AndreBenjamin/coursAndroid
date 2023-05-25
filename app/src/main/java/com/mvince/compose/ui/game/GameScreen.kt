@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mvince.compose.domain.Question
 import kotlinx.coroutines.flow.forEach
+import okio.ByteString.Companion.encodeUtf8
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,24 +20,39 @@ import kotlinx.coroutines.flow.forEach
 fun GameScreen() {
     val viewModel = hiltViewModel<GameViewModel>()
     val currentQuestion = viewModel.currentQuestion.collectAsState().value
-    val questions = viewModel.questions.collectAsState().value
+    val response = viewModel.response.collectAsState().value
+    val gameScore = viewModel.gameScore.collectAsState().value
+    val gameState = viewModel.gameState.collectAsState().value
+    val numQuestion = viewModel.numQuestion.collectAsState().value +1
     Scaffold() {
-        //Text(text = "Working")
-        if (currentQuestion != null) {
-            Text(text = currentQuestion.question ?: "Pas de question disponible")
-        }
-        Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
-
-            /*if (questions != null) {
-                questions.forEach() {
-                    val question = it as Question
-                    Text(text = question.question ?: "Pas de question disponible")
+        if(gameState == true){
+            Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
+                if (currentQuestion != null) {
+                    Text(text = "Type : "+ currentQuestion.category.encodeUtf8().utf8())
+                    Text(text = "Difficulty : "+ currentQuestion.difficulty.encodeUtf8().utf8())
+                    Text(text = currentQuestion.question.encodeUtf8().utf8() ?: "Pas de question disponible")
                 }
-            }*/
-            //Text(text = currentQuestion?.question ?: "Pas de question disponible")
-            /*Button(onClick = { viewModel.validateAnswers(currentQuestion, chosenAnswers)}) {
-                
-            }*/
+                if (response != null) {
+                    Text(text = "Question : " + numQuestion.toString() + "/10")
+                    response.forEach {
+                        Button(onClick = { viewModel.validateAnswer(it)}) {
+                            Text(text = it.reponse.encodeUtf8().utf8())
+                        }
+                    }
+                }
+                if (gameScore!= null){
+                    Text(text = "Score : " + gameScore)
+                }
+            }
+
         }
+        if(gameState == false){
+            Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
+                Text(text = "Game Ended")
+                Text(text = "Your score is : " + gameScore.toString())
+            }
+        }
+
+
     }
 }

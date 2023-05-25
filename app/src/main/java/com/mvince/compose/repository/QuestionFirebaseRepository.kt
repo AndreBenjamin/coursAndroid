@@ -14,7 +14,6 @@ class QuestionFirebaseRepository @Inject constructor(
     private val firestore: FirebaseFirestore
     ) {
     fun insertQuestion(questions: List<Question>): Boolean {
-
         return firestore.collection(_collection).document(LocalDate.now().toString()).set(QuestionFirebase(questions)).isSuccessful
     }
 
@@ -22,9 +21,11 @@ class QuestionFirebaseRepository @Inject constructor(
         return firestore.collection(_collection).snapshots().map { it.toObjects<Question>() }
     }
 
-    /*fun getById(id: String): Flow<List<Question>>{
-        return firestore.collection(_collection).get(id)
-    }*/
+    fun getFireStoreQuestionOfTheDay(): Flow<QuestionFirebase?>{
+        return firestore.collection(_collection).document(LocalDate.now().toString()).snapshots().map {
+            it.toObject(QuestionFirebase::class.java)
+        }
+    }
 
     companion object {
         private const val _collection: String = "QUESTIONS"
