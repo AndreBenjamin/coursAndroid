@@ -2,6 +2,9 @@ package com.mvince.compose.ui.Score
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.User
 import com.mvince.compose.repository.UserFirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -19,7 +22,9 @@ class ScoreTableauViewModel @Inject constructor(
 ): ViewModel(){
     //mutable
 
-    val users = userFirebaseRepository.getTop10().stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
+    val topUsers = userFirebaseRepository.getTop10().stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
-
+    //TODO: retirer l'email pour remplacer par variable
+    //val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email)[0]
+    var currentUser = userFirebaseRepository.getByEmail("test@test.fr").stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 }
