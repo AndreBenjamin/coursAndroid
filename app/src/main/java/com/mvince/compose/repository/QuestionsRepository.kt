@@ -7,6 +7,7 @@ import com.mvince.compose.domain.QuestionFirebase
 import com.mvince.compose.network.QuestionsOfTheDayApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import okio.ByteString.Companion.encodeUtf8
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -18,11 +19,11 @@ class QuestionsRepository @Inject constructor(
     suspend fun getQuestionsOfTheDay(): List<Question> {
         val questions = api.getQuestions()
         val questionList = questions.results.map { Question(
-            category = it.category,
-            type = it.type,
-            difficulty = it.difficulty,
-            question = it.question,
-            correctAnswer = it.correctAnswer,
+            category = it.category.encodeUtf8().utf8(),
+            type = it.type.encodeUtf8().utf8(),
+            difficulty = it.difficulty.encodeUtf8().utf8(),
+            question = it.question.encodeUtf8().utf8(),
+            correctAnswer = it.correctAnswer.encodeUtf8().utf8(),
             incorrectAnswer = it.incorrectAnswers,
         )}
 

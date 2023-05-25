@@ -18,4 +18,6 @@ data class Result(
     val question: String,
     @Json(name = "type")
     val type: String
-)
+){
+    constructor(): this("", "", "", emptyList(), "", "")
+}

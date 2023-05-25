@@ -7,4 +7,6 @@ data class Question(
     var question: String,
     var correctAnswer: String,
     var incorrectAnswer: List<String>
-)
+){
+    constructor(): this("", "", "", "", "", emptyList())
+}

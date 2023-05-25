@@ -51,8 +51,7 @@ class GameViewModel @Inject constructor(
         get() = _gameState
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val test = questionsRepository.getQuestionsOfTheDay()
-            /*val firebaseQuestion = questionFirebaseRepository.getFireStoreQuestionOfTheDay().collect{
+            val firebaseQuestion = questionFirebaseRepository.getFireStoreQuestionOfTheDay().collect{
                 if(it?.questionList == null){
                     val question = questionsRepository.getQuestionsOfTheDay()
                     _questions.value = question
@@ -63,9 +62,7 @@ class GameViewModel @Inject constructor(
                     _questions.value = it.questionList
                     gameInit(question)
                 }
-            }*/
-            _questions.value = test
-            gameInit(test)
+            }
         }
 
     }
