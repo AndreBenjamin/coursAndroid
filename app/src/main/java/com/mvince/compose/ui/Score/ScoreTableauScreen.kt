@@ -1,26 +1,16 @@
 package com.mvince.compose.ui.Score
 
 import android.annotation.SuppressLint
-import android.icu.text.CaseMap.Title
-import android.widget.TextView
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.mvince.compose.domain.User
 import com.mvince.compose.domain.UserFirebase
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

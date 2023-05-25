@@ -1,14 +1,11 @@
 package com.mvince.compose.repository
 
-import android.provider.ContactsContract.CommonDataKinds.Email
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObjects
-import com.mvince.compose.domain.User
 import com.mvince.compose.domain.UserFirebase
 import kotlinx.coroutines.flow.map
 
