@@ -34,107 +34,87 @@ fun UsersScreen(navHostController: NavHostController) {
     // fetching local context
     val mContext = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { navHostController.navigate(Route.WELCOME_SCREEN) }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
-                    }
-                },
-                title = {
-                    Text(
-                        text = "TrivialPoursuit",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        //1
+
+        if (user != null){
+            Text(text = "Pseudo : " + user.displayName, //faut mettre le pseudo fait par mika
+                style = MaterialTheme.typography.titleMedium)
+            Text(text = "email : " + user.email,
+                style = MaterialTheme.typography.titleMedium)
+            Text(text = "score : " , // faut mettre le score fait par Mika
+                style = MaterialTheme.typography.titleMedium)
+        }
+
+
+        Button(onClick = {
+            navHostController.navigate(Route.MODIFY_USER)},
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
+            Text(
+                text = "Modifier l'utilisateur",
+                style = MaterialTheme.typography.titleMedium
             )
-        },
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        }
+
+        /* TextField(value = avatar, //image
+             onValueChange = { avatar = it },
+             visualTransformation = PasswordVisualTransformation(),
+             label = { Text(text = "Avatar") },
+             keyboardOptions = KeyboardOptions(
+                 capitalization = KeyboardCapitalization.None,
+                 autoCorrect = false,
+                 keyboardType = KeyboardType.Text,
+                 imeAction = ImeAction.Done,
+             )
+         )*/
+
+        /* Column(
+             modifier = Modifier.fillMaxSize(),
+             verticalArrangement = Arrangement.Bottom
+         ) {
+            // Spacer(modifier = Modifier.weight(1f))
+             Row(Modifier.padding(16.dp)) {*/
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Button(onClick = { viewModel.deleteUser() },
+                modifier = Modifier.padding(end = 8.dp)
             ) {
-                //1
-
-                if (user != null){
-                    Text(text = "Pseudo : " + user.displayName, //faut mettre le pseudo fait par mika
-                        style = MaterialTheme.typography.titleMedium)
-                    Text(text = "email : " + user.email,
-                        style = MaterialTheme.typography.titleMedium)
-                    Text(text = "score : " , // faut mettre le score fait par Mika
-                        style = MaterialTheme.typography.titleMedium)
-                }
-
-
-                Button(onClick = {
-                    navHostController.navigate(Route.MODIFY_USER)},
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = "Modifier l'utilisateur",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-
-                /* TextField(value = avatar, //image
-                     onValueChange = { avatar = it },
-                     visualTransformation = PasswordVisualTransformation(),
-                     label = { Text(text = "Avatar") },
-                     keyboardOptions = KeyboardOptions(
-                         capitalization = KeyboardCapitalization.None,
-                         autoCorrect = false,
-                         keyboardType = KeyboardType.Text,
-                         imeAction = ImeAction.Done,
-                     )
-                 )*/
-
-                /* Column(
-                     modifier = Modifier.fillMaxSize(),
-                     verticalArrangement = Arrangement.Bottom
-                 ) {
-                    // Spacer(modifier = Modifier.weight(1f))
-                     Row(Modifier.padding(16.dp)) {*/
+                Text(
+                    text = "Supprimer l'utilisateur",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Button(onClick = {
+                viewModel.signOut()
+                Toast.makeText(mContext, "Vous êtes maintenant déconnecter", Toast.LENGTH_SHORT).show()
+                navHostController.navigate(Route.WELCOME_SCREEN)
+             },
+                modifier = Modifier.padding(start = 8.dp)
             ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Button(onClick = { viewModel.deleteUser() },
-                        modifier = Modifier.padding(end = 8.dp)
-                    ) {
-                        Text(
-                            text = "Supprimer l'utilisateur",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Button(onClick = {
-                        viewModel.signOut()
-                        Toast.makeText(mContext, "Vous êtes maintenant déconnecter", Toast.LENGTH_SHORT).show()
-                        navHostController.navigate(Route.WELCOME_SCREEN)
-                     },
-                        modifier = Modifier.padding(start = 8.dp)
-                    ) {
-                        Text(
-                            text = "Deconnexion",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
+                Text(
+                    text = "Deconnexion",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
-        //bottomBar = { BottomBar(navHostController = navHostController) }
-    )
+    }
+
 }

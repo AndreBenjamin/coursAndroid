@@ -88,7 +88,7 @@ fun RulesScreen(navHostController: NavHostController) {
         bottomBar = {
             BottomAppBar() {
                 Button(
-                    onClick = { navHostController.navigate(Route.GAME) },
+                    onClick = { navHostController.navigate(Route.BOTTOM_BAR) },
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(text = "Suivant")

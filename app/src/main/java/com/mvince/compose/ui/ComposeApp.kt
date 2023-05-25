@@ -1,5 +1,6 @@
 package com.mvince.compose.ui
 
+import BottomBar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.ui.Score.ScoreTableauScreen
 import com.mvince.compose.ui.signUp.SignUpScreen
 import com.mvince.compose.ui.details.DetailsScreen
 import com.mvince.compose.ui.game.GameScreen
@@ -61,6 +63,12 @@ fun ComposeApp() {
         composable(Route.MODIFY_USER) {
             ModifyUserScreen(navController)
         }
+        composable(Route.CLASSEMENT) {
+            ScoreTableauScreen(navController)
+        }
+        composable(Route.BOTTOM_BAR) {
+            BottomBar(navController)
+        }
         composable(
             route = "${Route.DETAIL}/{${Argument.USERNAME}}",
             arguments = listOf(
@@ -84,6 +92,8 @@ object Route {
     const val WELCOME_SCREEN = "welcome"
     const val RULES = "rules"
     const val MODIFY_USER = "modifyUser"
+    const val CLASSEMENT = "classement"
+    const val BOTTOM_BAR = "bottomBar"
 }
 
 object Argument {
