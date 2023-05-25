@@ -16,11 +16,12 @@ import androidx.navigation.compose.rememberNavController
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.game.GameScreen
 import com.mvince.compose.ui.theme.JetpackComposeBoilerplateTheme
+import com.mvince.compose.ui.users.UsersScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(navHostController: NavHostController) {
+fun BottomBar(navController: NavHostController) {
 
     val appNavController = rememberNavController()
     val currentMenu = remember { mutableStateOf(Route.GAME) }
@@ -29,21 +30,11 @@ fun BottomBar(navHostController: NavHostController) {
         Scaffold(
             bottomBar = {
                 NavigationBar() {
-                    NavigationBarItem(selected = currentMenu.value == Route.USER,
-                        onClick = {
-                            currentMenu.value = Route.USER
-                            appNavController .navigate(Route.USER)
-                        }, icon = {
-                            Icon(
-                                painter = painterResource(id = com.mvince.compose.R.drawable.profile),
-                                contentDescription = "Profil"
-                            )
-                        }, label = { Text(text = "Profil") })
                     NavigationBarItem(
                         selected = currentMenu.value == Route.GAME,
                         onClick = {
                             currentMenu.value = Route.GAME
-                            appNavController .navigate(Route.GAME)
+                            appNavController.navigate(Route.GAME)
                         },
                         icon = {
                             Icon(
@@ -52,6 +43,16 @@ fun BottomBar(navHostController: NavHostController) {
                             )
                         },
                         label = { Text(text = "Trivial Pursuit") })
+                    NavigationBarItem(selected = currentMenu.value == Route.USER,
+                        onClick = {
+                            currentMenu.value = Route.USER
+                            appNavController.navigate(Route.USER)
+                        }, icon = {
+                            Icon(
+                                painter = painterResource(id = com.mvince.compose.R.drawable.profile),
+                                contentDescription = "Profil"
+                            )
+                        }, label = { Text(text = "Profil") })
                     /*NavigationBarItem(
                         selected = selectedTab.value == Route.RANKING,
                         onClick = {
@@ -72,16 +73,12 @@ fun BottomBar(navHostController: NavHostController) {
                 navController = appNavController,
                 startDestination = Route.GAME
             ) {
-                /*composable(Route.USER) {
-                    UsersScreen(navController = navHostController)
-                }*/
                 composable(Route.GAME) {
-                    GameScreen(navHostController = navHostController)
+                    GameScreen(appNavController)
                 }
-                /*
-                composable(Route.RANKING) {
-                    RankingBody(navController = appNavController)
-                }*/
+                composable(Route.USER) {
+                    UsersScreen(navController)
+                }
             }
         }
     }

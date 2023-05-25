@@ -20,7 +20,7 @@ fun GameScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<GameViewModel>()
     
     val currentQuestion = viewModel.currentQuestion.collectAsState().value
-    Scaffold(bottomBar = { BottomBar(navHostController = navHostController) }) {
+    Scaffold(bottomBar = { BottomBar(navHostController) }) {
         Column(modifier = androidx.compose.ui.Modifier.padding(it)) {
             Text(text = currentQuestion?.question ?:"")
         }

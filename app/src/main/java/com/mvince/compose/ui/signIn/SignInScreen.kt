@@ -3,6 +3,7 @@ package com.mvince.compose.ui.signIn
 import android.annotation.SuppressLint
 import android.os.Build
 import android.text.TextUtils
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -58,6 +60,9 @@ fun SignInScreen(navHostController: NavHostController) {
 
     val authResource = viewModel.signupFlow.collectAsState()
     var showError by remember { mutableStateOf(false) }
+
+    // fetching local context
+    val mContext = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -128,14 +133,23 @@ fun SignInScreen(navHostController: NavHostController) {
                 )
                 Button(
                     onClick = {
-                        viewModel.signIn(email, password)
-                        val user = Firebase.auth.currentUser
-                        if (user != null && user.email != null && user.email != ""){
-                            navHostController.navigate(Route.RULES)
-                        } else {
+                        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                            Toast.makeText(mContext, "Entrer un email valide", Toast.LENGTH_SHORT).show()
                             showError = true
+                        } else if (email.isNotEmpty() and password.isEmpty()){
+                            Toast.makeText(mContext, "champ mot de passe vide", Toast.LENGTH_SHORT).show()
+                        } else if (email.isEmpty() and password.isEmpty()){
+                            Toast.makeText(mContext, "Champs mot de passe et email vide", Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.signIn(email, password)
+                            val user = Firebase.auth.currentUser
+                            if (user != null && user.email != null && user.email != ""){
+                                navHostController.navigate(Route.RULES)
+                            } else {
+                                Toast.makeText(mContext, "L'utilisateur n'existe pas, ou le mot de passe ne correspond pas", Toast.LENGTH_SHORT).show()
+                                showError = true
+                            }
                         }
-
                     },
                     enabled = email.isNotEmpty() && password.isNotEmpty(),
                     modifier = Modifier.padding(top = 8.dp)

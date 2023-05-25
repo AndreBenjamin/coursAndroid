@@ -14,9 +14,11 @@ import com.google.firebase.ktx.Firebase
 import com.mvince.compose.ui.signUp.SignUpScreen
 import com.mvince.compose.ui.details.DetailsScreen
 import com.mvince.compose.ui.game.GameScreen
+import com.mvince.compose.ui.modifyUser.ModifyUserScreen
 import com.mvince.compose.ui.resetPassword.ResetPasswordScreen
 import com.mvince.compose.ui.rules.RulesScreen
 import com.mvince.compose.ui.signIn.SignInScreen
+import com.mvince.compose.ui.users.UsersScreen
 import com.mvince.compose.ui.welcomeScreen.WelcomeScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -27,7 +29,7 @@ fun ComposeApp() {
 
     fun startRedirection(): String {
         if (user?.email == null){ // TODO BEN Retirer le == pour !=
-            return Route.GAME
+            return Route.USER
         }
         return Route.WELCOME_SCREEN
     }
@@ -54,6 +56,12 @@ fun ComposeApp() {
         composable(Route.RULES) {
             RulesScreen(navController)
         }
+        composable(Route.USER) {
+            UsersScreen(navController)
+        }
+        composable(Route.MODIFY_USER) {
+            ModifyUserScreen(navController)
+        }
         composable(
             route = "${Route.DETAIL}/{${Argument.USERNAME}}",
             arguments = listOf(
@@ -76,6 +84,7 @@ object Route {
     const val RESET_PASSWORD = "resetPassword"
     const val WELCOME_SCREEN = "welcome"
     const val RULES = "rules"
+    const val MODIFY_USER = "modifyUser"
 }
 
 object Argument {
