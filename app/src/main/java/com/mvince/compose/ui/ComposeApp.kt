@@ -30,9 +30,9 @@ fun ComposeApp() {
 
     fun startRedirection(): String {
         if (user?.email != null){ // TODO BEN Retirer le == pour !=
-            return Route.WELCOME_SCREEN
+            return Route.BOTTOM_BAR
         }
-        return Route.WELCOME_SCREEN // TODO BEN Remettre Game ici
+        return Route.WELCOME_SCREEN
     }
 
     NavHost(

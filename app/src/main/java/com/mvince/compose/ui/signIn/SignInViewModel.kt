@@ -50,7 +50,7 @@ class SignInViewModel @Inject constructor(
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun signIn(email: String, password: String, pseudo: String, bestScore: Int, score: Int, signIn: String) {
+    fun signIn(email: String, password: String) {
         viewModelScope.launch {
 
             authRepository.signIn(email, password)
@@ -59,12 +59,14 @@ class SignInViewModel @Inject constructor(
             if (user != null) {
                 if (user.uid != null){
 
-                    // SET DATE
+/*                    // SET DATE
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
 
                     _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo,current.format(formatter), signIn))
+                */
                 }
+
             }
             _isSigned.value = true //authRepository.signIn(email, password)
             
@@ -72,6 +74,16 @@ class SignInViewModel @Inject constructor(
     }
 
 
+    fun modifyUser(email: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+        val user = Firebase.auth.currentUser
+
+        if (user != null){
+            if (user.uid != null && user.uid != ""){
+
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo, lastCo, signUp)) // TODO Ben Modifier LastCo
+            }
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     fun resetPassword(email: String) {
         viewModelScope.launch {

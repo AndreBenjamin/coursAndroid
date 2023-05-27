@@ -115,8 +115,8 @@ fun ResetPasswordScreen(navHostController: NavHostController) {
                         Toast.makeText(mContext, "Entrer un email valide", Toast.LENGTH_SHORT).show()
                         showError = true
                     } else {
-                        viewModel.signIn(email, password)
                         viewModel.resetPassword(email)
+                        Toast.makeText(mContext, "Un mail vient de vous être envoyer a l'adresse:" + email, Toast.LENGTH_SHORT).show()
                         navHostController.navigate(Route.WELCOME_SCREEN)
                     }
                   },

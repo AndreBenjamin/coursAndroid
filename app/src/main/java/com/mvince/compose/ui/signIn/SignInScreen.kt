@@ -42,7 +42,7 @@ import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,14 +50,10 @@ import com.mvince.compose.ui.signUp.SignUpViewModel
 fun SignInScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<SignInViewModel>()
 
-    // by default, the value is equal to 0, and remember will keep the value in memory
-    var email by remember {
-        mutableStateOf("")
-    }
+    var email by mutableStateOf("")
 
-    var password by remember {
-        mutableStateOf("")
-    }
+
+    var password by mutableStateOf("")
 
     val authResource = viewModel.signupFlow.collectAsState()
     var showError by remember { mutableStateOf(false) }
@@ -100,11 +96,11 @@ fun SignInScreen(navHostController: NavHostController) {
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
-
                 TextField(
                     value = email,
-                    onValueChange = { email = it },
-                    leadingIcon = {
+                    onValueChange = {
+                        email = it
+                    }, leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
                             contentDescription = "Email Icon"
@@ -118,7 +114,7 @@ fun SignInScreen(navHostController: NavHostController) {
                         autoCorrect = false,
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
-                    )
+                    ),
                 )
                 OutlinedTextField(
                     value = password,
@@ -131,8 +127,8 @@ fun SignInScreen(navHostController: NavHostController) {
                         autoCorrect = false,
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
-                        ),
-                    modifier = Modifier.padding(top = 8.dp)
+
+                        )
                 )
                 Button(
                     onClick = {
@@ -144,13 +140,15 @@ fun SignInScreen(navHostController: NavHostController) {
                         } else if (email.isEmpty() and password.isEmpty()){
                             Toast.makeText(mContext, "Champs mot de passe et email vide", Toast.LENGTH_SHORT).show()
                         } else {
+                            viewModel.signIn(email, password)
                             currentUser.forEach {
                                 val current = it as UserFirebase
                                 val pseudo = current.pseudo
                                 val bestScore = current.bestScore
                                 val score = current.score
                                 val signIn = current.signIn
-                                viewModel.signIn(email, password, pseudo, bestScore, score, signIn)
+                                val lastCo = current.lastCo
+                                viewModel.modifyUser(email, bestScore, score, pseudo, lastCo, signIn)
                             }
                             val user = Firebase.auth.currentUser
                             if (user != null && user.email != null && user.email != ""){

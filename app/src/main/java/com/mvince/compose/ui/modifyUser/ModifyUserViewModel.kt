@@ -19,6 +19,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class ModifyUserViewModel @Inject constructor(
+    private val firebaseRepository: UserFirebaseRepository,
     userFirebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
 
@@ -48,4 +49,13 @@ class ModifyUserViewModel @Inject constructor(
     }
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
+    fun modifyPseudo(email: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+        val user = Firebase.auth.currentUser
+
+        if (user != null){
+            if (user.uid != null && user.uid != ""){
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo, lastCo, signUp))
+            }
+        }
+    }
 }

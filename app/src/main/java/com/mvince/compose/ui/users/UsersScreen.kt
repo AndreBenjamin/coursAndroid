@@ -70,18 +70,11 @@ fun UsersScreen(navHostController: NavHostController) {
                 style = MaterialTheme.typography.titleMedium
             )
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 50.dp),// TODO BEN Modifier affichage ici, c pa bo
             horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.Bottom,
         ) {
             Button(onClick = { viewModel.deleteUser() },
                 modifier = Modifier.padding(end = 8.dp)
@@ -95,7 +88,7 @@ fun UsersScreen(navHostController: NavHostController) {
                 viewModel.signOut()
                 Toast.makeText(mContext, "Vous êtes maintenant déconnecter", Toast.LENGTH_SHORT).show()
                 navHostController.navigate(Route.WELCOME_SCREEN)
-             },
+            },
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 Text(
@@ -105,5 +98,4 @@ fun UsersScreen(navHostController: NavHostController) {
             }
         }
     }
-
 }

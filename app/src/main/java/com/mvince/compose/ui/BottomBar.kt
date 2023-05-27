@@ -67,16 +67,6 @@ fun BottomBar(navController: NavHostController) {
                             )
                         },
                         label = { Text(text = "Trivial Pursuit") })
-                    NavigationBarItem(selected = currentMenu.value == Route.USER,
-                        onClick = {
-                            currentMenu.value = Route.USER
-                            appNavController.navigate(Route.USER)
-                        }, icon = {
-                            Icon(
-                                painter = painterResource(id = com.mvince.compose.R.drawable.profile),
-                                contentDescription = "Profil"
-                            )
-                        }, label = { Text(text = "Profil") })
                     NavigationBarItem(
                         selected = currentMenu.value == Route.CLASSEMENT,
                         onClick = {
@@ -103,6 +93,16 @@ fun BottomBar(navController: NavHostController) {
                             )
                         },
                         label = { Text(text = "Régles") })
+                    NavigationBarItem(selected = currentMenu.value == Route.USER,
+                        onClick = {
+                            currentMenu.value = Route.USER
+                            appNavController.navigate(Route.USER)
+                        }, icon = {
+                            Icon(
+                                painter = painterResource(id = com.mvince.compose.R.drawable.profile),
+                                contentDescription = "Profil"
+                            )
+                        }, label = { Text(text = "Profil") })
                 }
             }
         ) {

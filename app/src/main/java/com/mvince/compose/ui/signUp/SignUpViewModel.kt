@@ -54,17 +54,6 @@ class SignUpViewModel @Inject constructor(
             authRepository.signUp(email, password)
                 val user = getUserProfile()
 
-            /*val cities = FirebaseFirestore.
-
-            val data1 = hashMapOf(
-                "name" to "San Francisco",
-                "state" to "CA",
-                "country" to "USA",
-                "capital" to false,
-                "population" to 860000,
-                "regions" to listOf("west_coast", "norcal"),
-            )
-            cities.document("SF").set(data1)*/
             if (user != null) {
                 if (user.uid != null){
 
@@ -72,7 +61,7 @@ class SignUpViewModel @Inject constructor(
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
 
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0,pseudo,current.format(formatter), current.format(formatter)))
+                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 0,0,pseudo,current.format(formatter), current.format(formatter)))
 
 
                 }
