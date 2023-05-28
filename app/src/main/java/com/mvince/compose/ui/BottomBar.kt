@@ -89,10 +89,10 @@ fun BottomBar(navController: NavHostController) {
                         icon = {
                             Icon(
                                 painter = painterResource(id = com.mvince.compose.R.drawable.rules),
-                                contentDescription = "Régles"
+                                contentDescription = "Règles"
                             )
                         },
-                        label = { Text(text = "Régles") })
+                        label = { Text(text = "Règles") })
                     NavigationBarItem(selected = currentMenu.value == Route.USER,
                         onClick = {
                             currentMenu.value = Route.USER

@@ -55,39 +55,37 @@ fun ScoreTableauScreen(navHostController: NavHostController){
 
                     Text(
                         text = current.score.toString(),
-                        Modifier
-                            .padding(12.dp),
+                        Modifier.padding(12.dp),
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
-        }
 
-        users.forEach {
-            val user = it as UserFirebase
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp, 12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+            users.forEach {
+                val user = it as UserFirebase
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp, 16.dp)
                 ) {
-                    Text(
-                        text = (users.indexOf(user) +1).toString() + "   " + user.pseudo,
-                        Modifier
-                            .padding(12.dp, 8.dp, 12.dp, 8.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = (users.indexOf(user) +1).toString() + "   " + user.pseudo,
+                            Modifier
+                                .padding(12.dp, 8.dp, 12.dp, 8.dp)
+                        )
 
-                    Text(
-                        text = user.score.toString(),
-                        Modifier
-                            .padding(12.dp, 8.dp, 12.dp, 8.dp)
-                    )
+                        Text(
+                            text = user.score.toString(),
+                            Modifier
+                                .padding(12.dp, 8.dp, 12.dp, 8.dp)
+                        )
+                    }
                 }
             }
-
         }
     }
 }
