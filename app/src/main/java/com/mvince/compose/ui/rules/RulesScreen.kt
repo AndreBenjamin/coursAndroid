@@ -2,31 +2,18 @@ package com.mvince.compose.ui.rules
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.text.TextUtils
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +22,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
+import com.mvince.compose.ui.signIn.SignInViewModel
+import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,10 +33,9 @@ import com.mvince.compose.ui.Route
 fun RulesScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<RulesViewModel>()
 
-    val user = Firebase.auth.currentUser
-
     val currentUser = viewModel.currentUser.collectAsState().value
 
+    val date = LocalDate.now().toString()
 
     Scaffold(
         topBar = {
@@ -105,7 +93,24 @@ fun RulesScreen(navHostController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { navHostController.navigate(Route.BOTTOM_BAR) },
+                    onClick = {
+                        currentUser.forEach {
+                            val current = it as UserFirebase
+                            var lastCo = current.lastCo
+
+                            if (lastCo != date){
+                                val email = current.email
+                                val lastPlayed = current.lastPlayed
+                                val pseudo = current.pseudo
+                                val bestScore = current.bestScore
+                                val score = current.score
+                                lastCo = date
+                                val signIn = current.signIn
+                                viewModel.modifyUser(email, lastPlayed, bestScore, score, pseudo, lastCo, signIn)
+                            }
+                        }
+                        navHostController.navigate(Route.BOTTOM_BAR)
+                      },
                     modifier = Modifier.padding(start = 2.dp)
                 ) {
                     Text(

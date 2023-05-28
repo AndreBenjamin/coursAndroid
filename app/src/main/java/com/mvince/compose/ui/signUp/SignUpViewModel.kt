@@ -21,8 +21,11 @@ import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
 import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModules_KeyModule
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,11 +60,9 @@ class SignUpViewModel @Inject constructor(
             if (user != null) {
                 if (user.uid != null){
 
-                    // SET DATE
-                    val current = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
+                    var date = LocalDate.now().toString()
 
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), "", 0,0,pseudo,current.format(formatter), current.format(formatter)))
+                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), "", 0,0,pseudo,date, date))
 
 
                 }

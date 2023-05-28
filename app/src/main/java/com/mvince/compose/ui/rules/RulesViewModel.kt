@@ -22,16 +22,28 @@ import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModule
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class RulesViewModel @Inject constructor(
-    userFirebaseRepository: UserFirebaseRepository
+    userFirebaseRepository: UserFirebaseRepository,
+    private val firebaseRepository: UserFirebaseRepository,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun modifyUser(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+        val user = Firebase.auth.currentUser
+
+        if (user != null){
+            if (user.uid != null && user.uid != ""){
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp))
+            }
+        }
+    }
 }

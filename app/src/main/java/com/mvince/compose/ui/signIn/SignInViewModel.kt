@@ -23,14 +23,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: OauthRepository,
-    private val firebaseRepository: UserFirebaseRepository,
     userFirebaseRepository: UserFirebaseRepository
 ) : ViewModel() {
 
@@ -70,18 +72,6 @@ class SignInViewModel @Inject constructor(
             }
             _isSigned.value = true //authRepository.signIn(email, password)
             
-        }
-    }
-
-
-    fun modifyUser(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
-        val user = Firebase.auth.currentUser
-
-        if (user != null){
-            if (user.uid != null && user.uid != ""){
-
-                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp)) // TODO Ben Modifier LastCo
-            }
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)

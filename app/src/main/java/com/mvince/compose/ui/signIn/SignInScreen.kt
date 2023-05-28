@@ -137,16 +137,6 @@ fun SignInScreen(navHostController: NavHostController) {
                             Toast.makeText(mContext, "Champs mot de passe et email vide", Toast.LENGTH_SHORT).show()
                         } else {
                             viewModel.signIn(email, password)
-                            currentUser.forEach {
-                                val current = it as UserFirebase
-                                val lastPlayed = current.lastPlayed
-                                val pseudo = current.pseudo
-                                val bestScore = current.bestScore
-                                val score = current.score
-                                val signIn = current.signIn
-                                val lastCo = current.lastCo
-                                viewModel.modifyUser(email, lastPlayed, bestScore, score, pseudo, lastCo, signIn)
-                            }
                             val user = Firebase.auth.currentUser
                             if (user != null && user.email != null && user.email != ""){
                                 navHostController.navigate(Route.RULES)
