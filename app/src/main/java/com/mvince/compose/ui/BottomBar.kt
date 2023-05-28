@@ -1,7 +1,9 @@
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.NavHost
@@ -27,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.R
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.UserFirebaseRepository
 import com.mvince.compose.ui.Route
@@ -68,6 +72,16 @@ fun BottomBar(navController: NavHostController) {
         return route
     }
 
+    fun getAvatar(): Int {
+        var avatar = 2131099701
+        currentUser.forEach {
+            val current = it as UserFirebase
+            var avatar = current.avatar
+            return avatar
+        }
+        return avatar
+    }
+
     JetpackComposeBoilerplateTheme() {
         Scaffold(
             topBar = {
@@ -78,6 +92,20 @@ fun BottomBar(navController: NavHostController) {
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                currentMenu.value = Route.USER
+                                appNavController.navigate(Route.USER)
+                            }
+                        ) {
+                            Image(
+                                painter = painterResource(id = getAvatar()),
+                                contentDescription = "",
+                                modifier = Modifier.size(100.dp)
+                            )
+                        }
                     }
                 )
             },

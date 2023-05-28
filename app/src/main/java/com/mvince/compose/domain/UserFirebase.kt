@@ -10,5 +10,6 @@ data class UserFirebase(
     var score: Int = 0,
     var pseudo: String = "",
     var lastCo: String = "",
-    val signIn: String = ""
+    val signIn: String = "",
+    val avatar: Int = 2131099701
 )

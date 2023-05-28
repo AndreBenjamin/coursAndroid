@@ -4,17 +4,21 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mvince.compose.R
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
 
@@ -43,6 +47,11 @@ fun UsersScreen(navHostController: NavHostController) {
         currentUser.forEach {
             val current = it as UserFirebase
             if (user != null){
+                Image(
+                    painter = painterResource(id = current.avatar),
+                    contentDescription = "Avatar",
+                    modifier = Modifier.size(Dp(150F))
+                )
                 Text(text = "Pseudo : " + current.pseudo, //faut mettre le pseudo fait par mika
                     style = MaterialTheme.typography.titleMedium)
                 Text(text = "email : " + current.email,

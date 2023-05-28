@@ -1,13 +1,18 @@
 package com.mvince.compose.ui.Score
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -74,14 +79,12 @@ fun ScoreTableauScreen(navHostController: NavHostController){
                     ) {
                         Text(
                             text = (users.indexOf(user) +1).toString() + "   " + user.pseudo,
-                            Modifier
-                                .padding(12.dp, 8.dp, 12.dp, 8.dp)
+                            Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
                         )
 
                         Text(
                             text = user.score.toString(),
-                            Modifier
-                                .padding(12.dp, 8.dp, 12.dp, 8.dp)
+                            Modifier.padding(12.dp, 8.dp, 12.dp, 8.dp)
                         )
                     }
                 }
