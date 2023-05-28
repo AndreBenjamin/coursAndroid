@@ -23,8 +23,8 @@ class UserFirebaseRepository @Inject constructor(private val firestore: Firebase
         return firestore.collection(_collection).whereEqualTo("email", email).limit(1).snapshots().map { it.toObjects<UserFirebase>()}
     }
 
-    fun getTop10(): Flow<List<UserFirebase>>{
-        return firestore.collection(_collection).orderBy("score", Query.Direction.DESCENDING).limit(10).snapshots().map { it.toObjects<UserFirebase>() }
+    fun getTop7(): Flow<List<UserFirebase>>{
+        return firestore.collection(_collection).orderBy("score", Query.Direction.DESCENDING).limit(7).snapshots().map { it.toObjects<UserFirebase>() }
     }
 
     fun getById(id:String): Flow<UserFirebase?>{

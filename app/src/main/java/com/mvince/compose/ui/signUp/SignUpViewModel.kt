@@ -20,6 +20,7 @@ import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
 import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModules_KeyModule
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -44,32 +45,26 @@ class SignUpViewModel @Inject constructor(
         get() = _isSigned
 
     private val _isAuthentificated = MutableStateFlow<Boolean>(false)
-    val isAuthentificated: StateFlow<Boolean>
-            get() = _isAuthentificated
 
-    var isEmailValid by mutableStateOf(false)
-    var isPasswordValid by mutableStateOf(false)
+    suspend fun signup(email: String, pseudo: String, password: String): FirebaseUser? {
+        return viewModelScope.async {
+            authRepository.signUp(email, password)
+        }.await()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun signup(email: String, pseudo: String, password: String) {
-        viewModelScope.launch {
+    fun createUser(pseudo: String){
+        val user = getUserProfile()
 
-            authRepository.signUp(email, password)
-                val user = getUserProfile()
+        if (user != null) {
+            if (user.uid != null){
 
-            if (user != null) {
-                if (user.uid != null){
+                var date = LocalDate.now().toString()
 
-                    var date = LocalDate.now().toString()
-
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), "", 0,0,pseudo,date, date))
+                _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), "", 0,0,pseudo,date, date))
 
 
-                }
             }
-            _isSigned.value = true //authRepository.signUp(email, password)
-            
-            // rememberNavController(navigators = )
         }
     }
 

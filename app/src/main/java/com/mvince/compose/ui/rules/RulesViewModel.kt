@@ -37,12 +37,12 @@ class RulesViewModel @Inject constructor(
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun modifyUser(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+    fun modifyUser(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String, avatar: Int) {
         val user = Firebase.auth.currentUser
 
         if (user != null){
             if (user.uid != null && user.uid != ""){
-                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp))
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp, avatar))
             }
         }
     }

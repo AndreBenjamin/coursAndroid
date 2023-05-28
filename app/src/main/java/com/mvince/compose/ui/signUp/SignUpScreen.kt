@@ -35,6 +35,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.signUp.SignUpViewModel
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -47,6 +48,8 @@ fun SignUpScreen(navHostController: NavHostController) {
     val emailState = remember { mutableStateOf("") }
     val pseudoState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val error: Boolean? = true
 
@@ -158,13 +161,15 @@ fun SignUpScreen(navHostController: NavHostController) {
                             Toast.makeText(mContext, "Le mot de passe a besoin de 8 caractères minimum", Toast.LENGTH_SHORT).show()
                             showError = true
                         } else {
-                            viewModel.signup(email, pseudo, password)
-                            val user = Firebase.auth.currentUser
-                            if (user != null && user.email != null && user.email != ""){
-                                navHostController.navigate(Route.RULES)
-                            } else {
-                                Toast.makeText(mContext, "Email ou Mot de passe déjà existant", Toast.LENGTH_SHORT).show()
-                                showError = true
+                            coroutineScope.launch {
+                                val user = viewModel.signup(email, pseudo, password)
+                                if (user != null && user.email != null && user.email != ""){
+                                    viewModel.createUser(pseudo)
+                                    navHostController.navigate(Route.RULES)
+                                } else {
+                                    Toast.makeText(mContext, "Email ou Mot de passe déjà existant", Toast.LENGTH_SHORT).show()
+                                    showError = true
+                                }
                             }
                         }
                     },

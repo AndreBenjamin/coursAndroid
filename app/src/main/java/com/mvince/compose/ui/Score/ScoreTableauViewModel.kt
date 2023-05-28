@@ -17,7 +17,7 @@ class ScoreTableauViewModel @Inject constructor(
 ): ViewModel(){
     //mutable
 
-    val topUsers = userFirebaseRepository.getTop10().stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
+    val topUsers = userFirebaseRepository.getTop7().stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 }

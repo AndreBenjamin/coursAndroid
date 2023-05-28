@@ -1,11 +1,17 @@
 package com.mvince.compose.ui.signIn
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.TextUtils
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
@@ -18,7 +24,9 @@ import kotlinx.coroutines.flow.StateFlow
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.OauthRepository
 import com.mvince.compose.repository.UserFirebaseRepository
+import com.mvince.compose.ui.Route
 import hilt_aggregated_deps._com_mvince_compose_ui_game_GameViewModel_HiltModules_KeyModule
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.stateIn
@@ -51,29 +59,12 @@ class SignInViewModel @Inject constructor(
 
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun signIn(email: String, password: String) {
-        viewModelScope.launch {
-
+    suspend fun signIn(email: String, password: String): FirebaseUser? {
+        return viewModelScope.async {
             authRepository.signIn(email, password)
-                val user = getUserProfile()
-
-            if (user != null) {
-                if (user.uid != null){
-
-/*                    // SET DATE
-                    val current = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
-
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo,current.format(formatter), signIn))
-                */
-                }
-
-            }
-            _isSigned.value = true //authRepository.signIn(email, password)
-            
-        }
+        }.await()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun resetPassword(email: String) {
         viewModelScope.launch {

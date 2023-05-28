@@ -106,7 +106,8 @@ fun RulesScreen(navHostController: NavHostController) {
                                 val score = current.score
                                 lastCo = date
                                 val signIn = current.signIn
-                                viewModel.modifyUser(email, lastPlayed, bestScore, score, pseudo, lastCo, signIn)
+                                val avatar = current.avatar
+                                viewModel.modifyUser(email, lastPlayed, bestScore, score, pseudo, lastCo, signIn, avatar)
                             }
                         }
                         navHostController.navigate(Route.BOTTOM_BAR)

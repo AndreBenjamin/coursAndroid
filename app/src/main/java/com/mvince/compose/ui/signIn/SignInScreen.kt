@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,14 +17,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,20 +33,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
+import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun SignInScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<SignInViewModel>()
 
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
 
     // fetching local context
     val mContext = LocalContext.current
@@ -125,7 +126,6 @@ fun SignInScreen(navHostController: NavHostController) {
                     onClick = {
                         val email = emailState.value
                         val password = passwordState.value
-
                         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                             Toast.makeText(mContext, "Entrer un email valide", Toast.LENGTH_SHORT).show()
                             showError = true
@@ -134,13 +134,18 @@ fun SignInScreen(navHostController: NavHostController) {
                         } else if (email.isEmpty() and password.isEmpty()){
                             Toast.makeText(mContext, "Champs mot de passe et email vide", Toast.LENGTH_SHORT).show()
                         } else {
-                            viewModel.signIn(email, password)
-                            val user = Firebase.auth.currentUser
-                            if (user != null && user.email != null && user.email != ""){
-                                navHostController.navigate(Route.RULES)
-                            } else {
-                                Toast.makeText(mContext, "L'utilisateur n'existe pas, ou le mot de passe ne correspond pas", Toast.LENGTH_SHORT).show()
-                                showError = true
+                            coroutineScope.launch {
+                                val user = viewModel.signIn(email, password)
+                                if (user?.email != "" && user?.email != null) {
+                                    navHostController.navigate(Route.RULES)
+                                } else {
+                                    Toast.makeText(
+                                        mContext,
+                                        "L'utilisateur n'existe pas, ou le mot de passe ne correspond pas",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    showError = true
+                                }
                             }
                         }
                     },
@@ -195,10 +200,4 @@ fun SignInScreen(navHostController: NavHostController) {
         }
 
     )
-
-}
-
-fun checkEmailValidity(email: String): Boolean {
-    return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email)
-        .matches();
 }
