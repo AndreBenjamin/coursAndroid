@@ -4,21 +4,28 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mvince.compose.domain.Question
 import com.mvince.compose.domain.QuestionResponse
+import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.repository.QuestionsRepository
 import com.mvince.compose.repository.QuestionFirebaseRepository
+import com.mvince.compose.repository.UserFirebaseRepository
+import com.mvince.compose.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val questionsRepository: QuestionsRepository,
-    private val questionFirebaseRepository: QuestionFirebaseRepository
+    private val questionFirebaseRepository: QuestionFirebaseRepository,
+    private val userFirebaseRepository: UserFirebaseRepository
 ): ViewModel() {
     // Initialization of the questions of the day
     private val _questions = MutableStateFlow<List<Question>?>(null)
@@ -44,6 +51,14 @@ class GameViewModel @Inject constructor(
     private val _gameState = MutableStateFlow<Boolean?>(null)
     val gameState: StateFlow<Boolean?>
         get() = _gameState
+
+    val user = Firebase.auth.currentUser
+
+    private val _currentUser = MutableStateFlow<UserFirebase?>(null)
+    val currentUser: StateFlow<UserFirebase?>
+        get()=_currentUser
+
+    private var _currentUserScore = 0
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val firebaseQuestion = questionFirebaseRepository.getFireStoreQuestionOfTheDay().collect{
@@ -56,6 +71,14 @@ class GameViewModel @Inject constructor(
                     val question =  it.questionList
                     _questions.value = it.questionList
                     gameInit(question)
+                }
+                if(user?.uid != null && user?.uid != "") {
+                    userFirebaseRepository.getById(user.uid).collect {
+                        if (it != null) {
+                            _currentUser.value = it
+                            _currentUserScore = it.score
+                        }
+                    }
                 }
             }
         }
@@ -96,6 +119,14 @@ class GameViewModel @Inject constructor(
                 _numQuestion.value = index +1
             }
         }else{
+            val newScore = _currentUserScore + _gameScore.value
+            if(_currentUser.value?.lastPlayed != LocalDate.now().toString()){
+                user?.let {
+                    userFirebaseRepository.updateScore(it.uid, newScore)
+                    userFirebaseRepository.updateLastPlayed(it.uid, LocalDate.now().toString())
+                }
+            }
+
             _gameState.update { false }
         }
     }

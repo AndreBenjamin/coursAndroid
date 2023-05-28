@@ -49,12 +49,12 @@ class ModifyUserViewModel @Inject constructor(
     }
     val currentUser = userFirebaseRepository.getByEmail(Firebase.auth.currentUser?.email).stateIn(viewModelScope, SharingStarted.Lazily, emptyList<List<UserFirebase>>())
 
-    fun modifyPseudo(email: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+    fun modifyPseudo(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
         val user = Firebase.auth.currentUser
 
         if (user != null){
             if (user.uid != null && user.uid != ""){
-                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo, lastCo, signUp))
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp))
             }
         }
     }

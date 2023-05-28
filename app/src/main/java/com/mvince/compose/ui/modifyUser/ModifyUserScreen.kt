@@ -22,8 +22,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
-import com.mvince.compose.ui.signUp.checkEmailValidity
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,7 +115,7 @@ fun ModifyUserScreen(navHostController: NavHostController){
                     currentUser.forEach {
                         val current = it as UserFirebase
                         if (pseudo != current.pseudo) {
-                            viewModel.modifyPseudo(current.email, current.bestScore, current.score, pseudo, current.lastCo, current.signIn)
+                            viewModel.modifyPseudo(current.email, current.lastPlayed, current.bestScore, current.score, pseudo, current.lastCo, current.signIn)
                         } else {
                             Toast.makeText(mContext, "Le pseudo est le même que l'ancien, aucun changement", Toast.LENGTH_SHORT).show()
                         }

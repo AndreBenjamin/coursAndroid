@@ -45,29 +45,6 @@ class ResetPasswordViewModel @Inject constructor(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun signIn(email: String, password: String) {
-        viewModelScope.launch {
-
-            authRepository.signIn(email, password)
-                val user = getUserProfile()
-
-            if (user != null) {
-                if (user.uid != null){
-
-                    // SET DATE
-                    val current = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
-
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0, "",current.format(formatter), current.format(formatter)))
-                }
-            }
-            _isSigned.value = true //authRepository.signIn(email, password)
-            
-        }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun resetPassword(email: String) {
         viewModelScope.launch {
 

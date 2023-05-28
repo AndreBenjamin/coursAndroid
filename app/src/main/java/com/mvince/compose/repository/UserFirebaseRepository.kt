@@ -28,6 +28,20 @@ class UserFirebaseRepository @Inject constructor(private val firestore: Firebase
         return firestore.collection(_collection).orderBy("score", Query.Direction.DESCENDING).limit(10).snapshots().map { it.toObjects<UserFirebase>() }
     }
 
+    fun getById(id:String): Flow<UserFirebase?>{
+        return firestore.collection(_collection).document(id).snapshots().map{
+            it.toObject(UserFirebase::class.java);
+        }
+    }
+
+    fun updateScore(id: String, score: Int ): Boolean{
+        return firestore.collection(_collection).document(id).update("score", score).isSuccessful
+    }
+
+    fun updateLastPlayed(id: String, date: String):Boolean{
+        return firestore.collection(_collection).document(id).update("lastPlayed", date).isSuccessful
+    }
+
     companion object{
         private const val _collection: String = "USERS"
     }

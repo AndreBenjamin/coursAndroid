@@ -85,7 +85,7 @@ fun UsersScreen(navHostController: NavHostController) {
                 )
             }
             Button(onClick = {
-                viewModel.signOut()
+                viewModel.signOut(mContext)
                 Toast.makeText(mContext, "Vous êtes maintenant déconnecter", Toast.LENGTH_SHORT).show()
                 navHostController.navigate(Route.WELCOME_SCREEN)
             },

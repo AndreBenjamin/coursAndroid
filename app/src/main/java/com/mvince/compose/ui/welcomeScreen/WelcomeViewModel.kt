@@ -40,48 +40,4 @@ class WelcomeViewModel @Inject constructor(
         get() = _isSigned
 
     private val _isAuthentificated = MutableStateFlow<Boolean>(false)
-    val isAuthentificated: StateFlow<Boolean>
-            get() = _isAuthentificated
-
-    var isEmailValid by mutableStateOf(false)
-    var isPasswordValid by mutableStateOf(false)
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun signup(email: String, pseudo: String, password: String) {
-        viewModelScope.launch {
-
-            authRepository.signUp(email, password)
-                val user = getUserProfile()
-
-            if (user != null) {
-                if (user.uid != null){
-
-                    // SET DATE
-                    val current = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
-
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 5,0,pseudo,current.format(formatter), current.format(formatter)))
-                }
-            }
-            _isSigned.value = true //authRepository.signUp(email, password)
-            
-            // rememberNavController(navigators = )
-        }
-    }
-
-    fun getUserProfile(): FirebaseUser? {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            // TODO: Add Real Info To Return
-            val name = it.displayName
-            val email = it.email
-
-            // Check if user's email is verified
-            val emailVerified = it.isEmailVerified
-
-            // Get Firebase User Id
-            val uid = it.uid
-        }
-        return user
-    }
 }

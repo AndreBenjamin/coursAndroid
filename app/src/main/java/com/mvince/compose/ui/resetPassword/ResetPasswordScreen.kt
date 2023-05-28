@@ -46,13 +46,8 @@ fun ResetPasswordScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<ResetPasswordViewModel>()
 
     // by default, the value is equal to 0, and remember will keep the value in memory
-    var email by remember {
-        mutableStateOf("")
-    }
+    val emailState = remember { mutableStateOf("") }
 
-    var password by remember {
-        mutableStateOf("")
-    }
     var showError by remember { mutableStateOf(false) }
 
     // fetching local context
@@ -91,8 +86,8 @@ fun ResetPasswordScreen(navHostController: NavHostController) {
             }
 
             TextField(
-                value = email,
-                onValueChange = { email = it },
+                value = emailState.value,
+                onValueChange = { emailState.value = it },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Email,
@@ -111,6 +106,8 @@ fun ResetPasswordScreen(navHostController: NavHostController) {
             )
             Button(
                 onClick = {
+                    val email = emailState.value
+
                     if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                         Toast.makeText(mContext, "Entrer un email valide", Toast.LENGTH_SHORT).show()
                         showError = true
@@ -120,7 +117,7 @@ fun ResetPasswordScreen(navHostController: NavHostController) {
                         navHostController.navigate(Route.WELCOME_SCREEN)
                     }
                   },
-                enabled = email.isNotEmpty(),
+                enabled = emailState.value.isNotEmpty(),
                 modifier = Modifier.padding(8.dp),
             ) {
                 Text(

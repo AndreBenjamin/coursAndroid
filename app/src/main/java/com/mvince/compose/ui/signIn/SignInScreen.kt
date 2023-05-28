@@ -34,15 +34,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.mvince.compose.R
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
-import com.mvince.compose.ui.signUp.SignUpViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,12 +47,8 @@ import com.mvince.compose.ui.signUp.SignUpViewModel
 fun SignInScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<SignInViewModel>()
 
-    var email by mutableStateOf("")
-
-
-    var password by mutableStateOf("")
-
-    val authResource = viewModel.signupFlow.collectAsState()
+    val emailState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
 
     // fetching local context
@@ -97,9 +90,9 @@ fun SignInScreen(navHostController: NavHostController) {
                     )
                 }
                 TextField(
-                    value = email,
+                    value = emailState.value,
                     onValueChange = {
-                        email = it
+                        emailState.value = it
                     }, leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -117,8 +110,8 @@ fun SignInScreen(navHostController: NavHostController) {
                     ),
                 )
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = passwordState.value,
+                    onValueChange = { passwordState.value = it },
                     visualTransformation = PasswordVisualTransformation(),
                     label = { Text(text = "Mot de passe") },
                     placeholder = { Text(text = "Entrer votre Mot De Passe") },
@@ -132,6 +125,9 @@ fun SignInScreen(navHostController: NavHostController) {
                 )
                 Button(
                     onClick = {
+                        val email = emailState.value
+                        val password = passwordState.value
+
                         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                             Toast.makeText(mContext, "Entrer un email valide", Toast.LENGTH_SHORT).show()
                             showError = true
@@ -143,12 +139,13 @@ fun SignInScreen(navHostController: NavHostController) {
                             viewModel.signIn(email, password)
                             currentUser.forEach {
                                 val current = it as UserFirebase
+                                val lastPlayed = current.lastPlayed
                                 val pseudo = current.pseudo
                                 val bestScore = current.bestScore
                                 val score = current.score
                                 val signIn = current.signIn
                                 val lastCo = current.lastCo
-                                viewModel.modifyUser(email, bestScore, score, pseudo, lastCo, signIn)
+                                viewModel.modifyUser(email, lastPlayed, bestScore, score, pseudo, lastCo, signIn)
                             }
                             val user = Firebase.auth.currentUser
                             if (user != null && user.email != null && user.email != ""){
@@ -159,7 +156,7 @@ fun SignInScreen(navHostController: NavHostController) {
                             }
                         }
                     },
-                    enabled = email.isNotEmpty() && password.isNotEmpty(),
+                    enabled = emailState.value.isNotEmpty() && passwordState.value.isNotEmpty(),
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(

@@ -44,16 +44,9 @@ import com.mvince.compose.ui.signUp.SignUpViewModel
 fun SignUpScreen(navHostController: NavHostController) {
     val viewModel = hiltViewModel<SignUpViewModel>()
 
-    // by default, the value is equal to 0, and remember will keep the value in memory
-    var email by remember {
-        mutableStateOf("")
-    }
-    var pseudo by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+    val emailState = remember { mutableStateOf("") }
+    val pseudoState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
 
     val error: Boolean? = true
 
@@ -98,10 +91,10 @@ fun SignUpScreen(navHostController: NavHostController) {
                 }
                 if (error != null) {
                     TextField(
-                        value = email,
+                        value = emailState.value,
                         onValueChange = {
-                            email = it;
-                            error == !checkEmailValidity(email)  // Affiche une erreur si l'email n'est pas valide
+                            emailState.value = it;
+                            error == !checkEmailValidity(emailState.value)  // Affiche une erreur si l'email n'est pas valide
                         }, leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -121,8 +114,8 @@ fun SignUpScreen(navHostController: NavHostController) {
                     )
                 }
                 TextField(
-                    value = pseudo,
-                    onValueChange = { pseudo = it },
+                    value = pseudoState.value,
+                    onValueChange = { pseudoState.value = it },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Person,
@@ -140,8 +133,8 @@ fun SignUpScreen(navHostController: NavHostController) {
                     )
                 )
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = passwordState.value,
+                    onValueChange = { passwordState.value = it },
                     visualTransformation = PasswordVisualTransformation(),
                     label = { Text(text = "Mot de passe") },
                     placeholder = { Text(text = "Entrer votre Mot De Passe") },
@@ -155,6 +148,9 @@ fun SignUpScreen(navHostController: NavHostController) {
                 )
                 Button(
                     onClick = {
+                        val email = emailState.value
+                        val pseudo = pseudoState.value
+                        val password = passwordState.value
                         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                             Toast.makeText(mContext, "Email invalide", Toast.LENGTH_SHORT).show()
                             showError = true
@@ -172,7 +168,7 @@ fun SignUpScreen(navHostController: NavHostController) {
                             }
                         }
                     },
-                    enabled = email.isNotEmpty() && pseudo.isNotEmpty() && password.isNotEmpty(),
+                    enabled = emailState.value.isNotEmpty() && pseudoState.value.isNotEmpty() && passwordState.value.isNotEmpty(),
                     modifier = Modifier.padding(top = 8.dp),
                     ) {
                     Text(

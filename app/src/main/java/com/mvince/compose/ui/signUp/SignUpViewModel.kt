@@ -61,7 +61,7 @@ class SignUpViewModel @Inject constructor(
                     val current = LocalDateTime.now()
                     val formatter = DateTimeFormatter.ofPattern("DD/MM/YYYY")
 
-                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), 0,0,pseudo,current.format(formatter), current.format(formatter)))
+                    _isAuthentificated.value = firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), "", 0,0,pseudo,current.format(formatter), current.format(formatter)))
 
 
                 }

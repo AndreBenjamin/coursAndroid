@@ -74,13 +74,13 @@ class SignInViewModel @Inject constructor(
     }
 
 
-    fun modifyUser(email: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
+    fun modifyUser(email: String, lastPlayed: String, bestScore: Int, score: Int, pseudo: String, lastCo: String, signUp: String) {
         val user = Firebase.auth.currentUser
 
         if (user != null){
             if (user.uid != null && user.uid != ""){
 
-                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), bestScore,score, pseudo, lastCo, signUp)) // TODO Ben Modifier LastCo
+                firebaseRepository.insertUser(user.uid, UserFirebase(user.email.toString(), lastPlayed, bestScore,score, pseudo, lastCo, signUp)) // TODO Ben Modifier LastCo
             }
         }
     }
@@ -94,17 +94,7 @@ class SignInViewModel @Inject constructor(
 
     fun getUserProfile(): FirebaseUser? {
         val user = Firebase.auth.currentUser
-        user?.let {
-            // TODO: Add Real Info To Return
-            val name = it.displayName
-            val email = it.email
 
-            // Check if user's email is verified
-            val emailVerified = it.isEmailVerified
-
-            // Get Firebase User Id
-            val uid = it.uid
-        }
         return user
     }
 }
