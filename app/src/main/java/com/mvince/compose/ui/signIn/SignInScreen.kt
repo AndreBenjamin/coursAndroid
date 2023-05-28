@@ -54,8 +54,6 @@ fun SignInScreen(navHostController: NavHostController) {
     // fetching local context
     val mContext = LocalContext.current
 
-    val currentUser = viewModel.currentUser.collectAsState().value
-
     Scaffold(
         topBar = {
             TopAppBar(

@@ -13,22 +13,35 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.mvince.compose.domain.UserFirebase
+import com.mvince.compose.repository.UserFirebaseRepository
 import com.mvince.compose.ui.Route
 import com.mvince.compose.ui.Score.ScoreTableauScreen
+import com.mvince.compose.ui.game.EndGameScreen
 import com.mvince.compose.ui.game.GameScreen
+import com.mvince.compose.ui.game.StartGameScreen
 import com.mvince.compose.ui.modifyUser.ModifyUserScreen
 import com.mvince.compose.ui.rules.RulesScreen
+import com.mvince.compose.ui.signIn.SignInViewModel
 import com.mvince.compose.ui.theme.JetpackComposeBoilerplateTheme
 import com.mvince.compose.ui.users.UsersScreen
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,8 +49,24 @@ import com.mvince.compose.ui.users.UsersScreen
 @Composable
 fun BottomBar(navController: NavHostController) {
 
+    val viewModel = hiltViewModel<SignInViewModel>()
     val appNavController = rememberNavController()
     val currentMenu = remember { mutableStateOf(Route.GAME) }
+
+    val currentUser = viewModel.currentUser.collectAsState().value
+    val date = LocalDate.now().toString()
+
+    fun startRedirection(): String {
+        var route = Route.END_GAME
+        currentUser.forEach {
+            val current = it as UserFirebase
+            var lastPlayed = current.lastPlayed
+            if (lastPlayed != date){ // TODO BEN Retirer le == pour !=
+                route = Route.START_GAME
+            }
+        }
+        return route
+    }
 
     JetpackComposeBoilerplateTheme() {
         Scaffold(
@@ -55,10 +84,10 @@ fun BottomBar(navController: NavHostController) {
             bottomBar = {
                 NavigationBar() {
                     NavigationBarItem(
-                        selected = currentMenu.value == Route.GAME,
+                        selected = currentMenu.value == startRedirection(),
                         onClick = {
-                            currentMenu.value = Route.GAME
-                            appNavController.navigate(Route.GAME)
+                            currentMenu.value = startRedirection()
+                            appNavController.navigate(startRedirection())
                         },
                         icon = {
                             Icon(
@@ -108,10 +137,16 @@ fun BottomBar(navController: NavHostController) {
         ) {
             NavHost(
                 navController = appNavController,
-                startDestination = Route.GAME
+                startDestination = startRedirection()
             ) {
                 composable(Route.GAME) {
                     GameScreen(appNavController)
+                }
+                composable(Route.START_GAME) {
+                    StartGameScreen(navController)
+                }
+                composable(Route.END_GAME) {
+                    EndGameScreen(appNavController)
                 }
                 composable(Route.USER) {
                     UsersScreen(appNavController)

@@ -1,19 +1,15 @@
 package com.mvince.compose.ui.users
 
-import BottomBar
 import android.annotation.SuppressLint
+import android.os.Build
 import android.widget.Toast
-import androidx.compose.animation.AnimatedContentScope.SlideDirection.Companion.End
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -22,12 +18,10 @@ import com.google.firebase.ktx.Firebase
 import com.mvince.compose.domain.UserFirebase
 import com.mvince.compose.ui.Route
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UsersScreen(navHostController: NavHostController) {
-
-// by default, the value is equal to 0, and remember will keep the value in memory
 
     val user = Firebase.auth.currentUser
     val viewModel = hiltViewModel<UsersViewModel>()
@@ -55,7 +49,7 @@ fun UsersScreen(navHostController: NavHostController) {
                     style = MaterialTheme.typography.titleMedium)
                 Text(text = "score : "  + current.score, // faut mettre le score fait par Mika
                     style = MaterialTheme.typography.titleMedium)
-                Text(text = "Inscription : "  + current.signIn, // faut mettre le score fait par Mika
+                Text(text = "Inscription : "  + viewModel.formatDate(current.signIn), // faut mettre le score fait par Mika
                     style = MaterialTheme.typography.titleMedium)
             }
         }

@@ -94,6 +94,8 @@ object Route {
     const val MODIFY_USER = "modifyUser"
     const val CLASSEMENT = "classement"
     const val BOTTOM_BAR = "bottomBar"
+    const val START_GAME = "startGame"
+    const val END_GAME = "endGame"
 }
 
 object Argument {
